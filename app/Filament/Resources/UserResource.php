@@ -39,7 +39,7 @@ class UserResource extends Resource
 
                 Forms\Components\Select::make('gym_id')
                 ->required()
-                ->relationship('gyms','nombre_gym')
+                ->relationship('gyms','name')
                 ->searchable()
                 ->preload(),
             ]);

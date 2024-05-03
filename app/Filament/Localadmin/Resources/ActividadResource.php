@@ -49,6 +49,18 @@ class ActividadResource extends Resource
                     ->required(),
                 Forms\Components\Toggle::make('domingo')
                     ->required(),
+                Forms\Components\Repeater::make('Actividadentrenador')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\Select::make('entrenador_id')
+                            ->required()
+                            ->relationship(
+                                name: 'entrenadors',
+                                titleAttribute: 'nombre_entrenador',
+                                )
+                            ->searchable()
+                            ->preload(),
+                    ]),
             ]);
     }
 

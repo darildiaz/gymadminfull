@@ -11,26 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('gyms', function (Blueprint $table) {
+        Schema::create('actividadentrenadors', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->double('longitud');
-            $table->double('latitud');
-            $table->text('descripcion');
-            $table->text('imagen');
-            $table->foreignId('categorias_id')
-            ->contrained('categorias')
+            $table->foreignId('actividad_id')
+            ->contrained('actividad')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+            $table->foreignId('entrenadors_id')
+            ->contrained('entrenadors')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
             $table->timestamps();
         });
     }
-
+    //$table->foreignId(actividad::class);
+    //$table->foreignId(entrenador::class);
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('gyms');
+        Schema::dropIfExists('actividadentrenadors');
     }
 };

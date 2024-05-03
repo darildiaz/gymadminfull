@@ -20,12 +20,20 @@ class gym extends Model
     public function users(){
         return $this->hasMany(user::class);
     }
-    public function actividades(){
-        return $this->hasMany(actividad::class);
-    }
     public function gym_user(): HasMany{
 
         return $this->hasMany(gym_user::class);
     }
+
+    public function actividads(){
+        return $this->hasMany(actividad::class);
+    }
+    public function clientes(){
+        return $this->hasMany(cliente::class);
+    }
+    public function entrenadors(){
+        return $this->hasMany(entrenador::class);
+    }
+    
 
 }
