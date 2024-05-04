@@ -106,6 +106,21 @@ class ActividadResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make("inscribir")
+                ->form([
+                    Forms\Components\Repeater::make('suscripcions')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\Select::make('clientes_id')
+                            ->required()
+                            ->relationship(
+                                name: 'clientes',
+                                titleAttribute: 'nombre_cliente',
+                                )
+                            ->searchable()
+                            ->preload(),
+                    ]),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

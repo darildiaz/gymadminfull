@@ -73,13 +73,19 @@ class User extends Authenticatable implements FilamentUser, HasTenants
             return $this->isadmin;
         }
         if ($panel->getId() === 'localadmin'){
-
+           //     return
            // return $this->
         }
         return true;
     }
     public function gym(){
         return $this->belongsTo(gym::class);
+    }
+    public function clientes(){
+        return $this->hasMany(cliente::class);
+    }
+    public function entrenadors(){
+        return $this->hasMany(entrenador::class);
     }
 
 }

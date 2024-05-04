@@ -14,4 +14,7 @@ class cliente extends Model
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
     }
+    public function users(){
+        return $this->belongsTo(user::class);
+    }
 }

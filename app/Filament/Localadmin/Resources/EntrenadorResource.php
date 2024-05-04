@@ -24,28 +24,37 @@ class EntrenadorResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
+                Forms\Components\Select::make('users_id')
                     ->required()
-                    ->numeric(),
+                    ->relationship('users','name')
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\TextInput::make('nombre_entrenador')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(191),
                 Forms\Components\TextInput::make('apellido_entrenador')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(191),
                 Forms\Components\TextInput::make('telefono')
                     ->tel()
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(15),
                 Forms\Components\TextInput::make('telefono_emergencia')
                     ->tel()
+                    ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('Sexo')
+                    ->maxLength(15),
+                Forms\Components\Select::make('Sexo')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('especialidad')
+                    ->options([
+                        'femenino' => 'Femenino',
+                        'masculino' => 'Masculino',
+                        'otro' => 'Otro',
+                        ]),
+                Forms\Components\RichEditor::make('especialidad')
                     ->required()
+                    ->maxLength(65535)
                     ->columnSpanFull(),
 
             ]);
@@ -55,7 +64,7 @@ class EntrenadorResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('users.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_entrenador')

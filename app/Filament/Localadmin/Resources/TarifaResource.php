@@ -2,9 +2,9 @@
 
 namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Localadmin\Resources\SuscripcionResource\Pages;
-use App\Filament\Localadmin\Resources\SuscripcionResource\RelationManagers;
-use App\Models\Suscripcion;
+use App\Filament\Localadmin\Resources\TarifaResource\Pages;
+use App\Filament\Localadmin\Resources\TarifaResource\RelationManagers;
+use App\Models\Tarifa;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,31 +13,28 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class SuscripcionResource extends Resource
+class TarifaResource extends Resource
 {
-    protected static ?string $model = Suscripcion::class;
+    protected static ?string $model = Tarifa::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Clientes";
-    protected static ?string $tenantRelationshipName= 'suscripcions';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('actividads_id')
+                Forms\Components\TextInput::make('actividads_id')
                     ->required()
-                    ->relationship('actividads','descripcion')
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\Select::make('clientes_id')
+                    ->numeric(),
+                Forms\Components\TextInput::make('dias')
                     ->required()
-                    ->relationship('clientes','nombre_cliente')
-                    ->searchable()
-                    ->preload(),
-/*
-                Forms\Components\Toggle::make('habilitado')
-                    ->required(),*/
+                    ->numeric(),
+                Forms\Components\TextInput::make('precio')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('gym_id')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -45,17 +42,18 @@ class SuscripcionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('actividads.Descripcion')
+                Tables\Columns\TextColumn::make('actividads_id')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes.nombre_cliente')
+                Tables\Columns\TextColumn::make('dias')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes.apellido_cliente')
+                Tables\Columns\TextColumn::make('precio')
+                    ->numeric()
                     ->sortable(),
-
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('gym_id')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\IconColumn::make('habilitado')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -89,10 +87,10 @@ class SuscripcionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuscripcions::route('/'),
-            'create' => Pages\CreateSuscripcion::route('/create'),
-            'view' => Pages\ViewSuscripcion::route('/{record}'),
-            'edit' => Pages\EditSuscripcion::route('/{record}/edit'),
+            'index' => Pages\ListTarifas::route('/'),
+            'create' => Pages\CreateTarifa::route('/create'),
+            'view' => Pages\ViewTarifa::route('/{record}'),
+            'edit' => Pages\EditTarifa::route('/{record}/edit'),
         ];
     }
 }

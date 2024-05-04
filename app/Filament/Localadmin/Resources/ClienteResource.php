@@ -24,35 +24,54 @@ class ClienteResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('user_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\Select::make('users_id')
+                ->required()
+                ->relationship('users','name')
+                   ->searchable()
+                /*->createOptionForm([
+                    Forms\Components\TextInput::make('name')
+                    ->required(),
+                    Forms\Components\TextInput::make('email')
+                    ->email()
+                    ->required(),
+                    Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->hiddenOn('edit')
+                    ->required(),
+                    //Forms\Components\select::make('roles')->multiple()->relationship('roles','name')
+                ])*/
+
+                ->preload(),
+
                 Forms\Components\TextInput::make('nombre_cliente')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('apellido_cliente')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('telefono')
-                    ->tel()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('telefono_emergencia')
-                    ->tel()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('Sexo')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('peso')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('altura')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
+                ->required()
+                ->maxLength(191),
+            Forms\Components\TextInput::make('apellido_cliente')
+                ->required()
+                ->maxLength(191),
+            Forms\Components\TextInput::make('telefono')
+            ->tel()
+            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
+                ->required()
+                ->maxLength(15),
+            Forms\Components\TextInput::make('telefono_emergencia')
+            ->tel()
+            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
+                ->required()
+                ->maxLength(15),
+                Forms\Components\Select::make('Sexo')
+                ->required()
+                ->options([
+                    'femenino' => 'Femenino',
+                    'masculino' => 'Masculino',
+                    'otro' => 'Otro',
+                    ]),
+            Forms\Components\TextInput::make('peso')
+                ->required()
+                ->numeric(),
+            Forms\Components\TextInput::make('altura')
+                ->required()
+                ->numeric(),
             ]);
     }
 

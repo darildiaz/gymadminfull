@@ -14,5 +14,8 @@ class entrenador extends Model
     public function actividadentrenador(){
         return $this->hasMany(actividadentrenador::class);
     }
+    public function users(){
+        return $this->belongsTo(user::class);
+    }
 
 }
