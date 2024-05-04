@@ -11,8 +11,8 @@ class entrenador extends Model
     public function gym(){
         return $this->belongsTo(gym::class);
     }
-    public function actividads(): HasMany{
-
-        return $this->belongsToMany(actidad::class, 'actividadentrenador')->withTimestamps();
+    public function actividadentrenador(){
+        return $this->hasMany(actividadentrenador::class);
     }
+
 }

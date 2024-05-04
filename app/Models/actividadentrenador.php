@@ -20,4 +20,5 @@ class actividadentrenador extends pivot
     {
         return $this->belongsTo(actividad::class);
     }
+
 }

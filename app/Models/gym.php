@@ -34,6 +34,9 @@ class gym extends Model
     public function entrenadors(){
         return $this->hasMany(entrenador::class);
     }
-    
+    public function suscripcions(){
+        return $this->hasMany(suscripcion::class);
+    }
+
 
 }

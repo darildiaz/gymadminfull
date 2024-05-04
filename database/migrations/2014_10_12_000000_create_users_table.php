@@ -22,6 +22,7 @@ return new class extends Migration
             ->contrained('gyms')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+            $table->boolean('isadmin')->default(0);
             $table->timestamps();
         });
     }

@@ -37,6 +37,7 @@ class GymResource extends Resource
                     ->required()
                     ->maxLength(65535)
                     ->columnSpanFull(),
+                    Forms\Components\Toggle::make('habilitado'),
                 Forms\Components\FileUpload::make('imagen')
                 ->required()
                 ->image(),

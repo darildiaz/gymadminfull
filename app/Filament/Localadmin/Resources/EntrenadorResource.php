@@ -47,9 +47,7 @@ class EntrenadorResource extends Resource
                 Forms\Components\Textarea::make('especialidad')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
+
             ]);
     }
 
@@ -70,9 +68,6 @@ class EntrenadorResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('Sexo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gym_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

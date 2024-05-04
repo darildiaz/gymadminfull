@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
-use App\Models\User;
+use App\Filament\Localadmin\Resources\SuscripcionResource\Pages;
+use App\Filament\Localadmin\Resources\SuscripcionResource\RelationManagers;
+use App\Models\Suscripcion;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,37 +13,31 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class UserResource extends Resource
+class SuscripcionResource extends Resource
 {
-    protected static ?string $model = User::class;
-    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $model = Suscripcion::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = "Clientes";
+    protected static ?string $tenantRelationshipName= 'suscripcions';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\Select::make('actividads_id')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
+                    ->relationship('actividads','descripcion')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\Select::make('clientes_id')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\DateTimePicker::make('email_verified_at'),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required()
-                    ->maxLength(255),
+                    ->relationship('clientes','nombre_cliente')
+                    ->searchable()
+                    ->preload(),
 
-                Forms\Components\Select::make('gym_id')
-                ->required()
-                ->relationship('gyms','name')
-                ->searchable()
-                ->preload(),
-                Forms\Components\Toggle::make('isadmin'),
-
+                Forms\Components\Toggle::make('habilitado')
+                    ->required(),
             ]);
     }
 
@@ -51,23 +45,21 @@ class UserResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('email_verified_at')
-                    ->dateTime()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('actividads_id')
                     ->numeric()
                     ->sortable(),
-                    Tables\Columns\IconColumn::make('isadmin')
+                Tables\Columns\TextColumn::make('clientes_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('gym_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\IconColumn::make('habilitado')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -90,7 +82,6 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-
             //
         ];
     }
@@ -98,10 +89,10 @@ class UserResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListUsers::route('/'),
-            'create' => Pages\CreateUser::route('/create'),
-            'view' => Pages\ViewUser::route('/{record}'),
-            'edit' => Pages\EditUser::route('/{record}/edit'),
+            'index' => Pages\ListSuscripcions::route('/'),
+            'create' => Pages\CreateSuscripcion::route('/create'),
+            'view' => Pages\ViewSuscripcion::route('/{record}'),
+            'edit' => Pages\EditSuscripcion::route('/{record}/edit'),
         ];
     }
 }

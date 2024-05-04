@@ -69,6 +69,17 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
     public function canAccessPanel (Panel $panel): bool
     {
+        if ($panel->getId() === 'admin') {
+            return $this->isadmin;
+        }
+        if ($panel->getId() === 'localadmin'){
+
+           // return $this->
+        }
         return true;
     }
+    public function gym(){
+        return $this->belongsTo(gym::class);
+    }
+
 }

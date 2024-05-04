@@ -68,7 +68,7 @@ class ActividadResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('gym_id')
+                Tables\Columns\TextColumn::make('gym.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('Descripcion')

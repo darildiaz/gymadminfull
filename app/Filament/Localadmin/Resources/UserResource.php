@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
+use App\Filament\Localadmin\Resources\UserResource\Pages;
+use App\Filament\Localadmin\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -16,9 +16,12 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationGroup = "Gyms";
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+   // protected static ?string $navigationLabel = "Suscripciones";
+   protected static ?string $navigationGroup = "Gyms";
+
+   protected static ?string $tenantRelationshipName= 'users';
 
     public static function form(Form $form): Form
     {
@@ -36,15 +39,7 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
-
-                Forms\Components\Select::make('gym_id')
-                ->required()
-                ->relationship('gyms','name')
-                ->searchable()
-                ->preload(),
-                Forms\Components\Toggle::make('isadmin'),
-
-            ]);
+             ]);
     }
 
     public static function table(Table $table): Table
@@ -58,20 +53,18 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),
-                    Tables\Columns\IconColumn::make('isadmin')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+
             ])
             ->filters([
                 //
@@ -90,7 +83,6 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-
             //
         ];
     }

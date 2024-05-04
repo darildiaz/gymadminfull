@@ -22,6 +22,8 @@ return new class extends Migration
             ->contrained('categorias')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+            $table->boolean('habilitado')->default(1);
+
             $table->timestamps();
         });
     }

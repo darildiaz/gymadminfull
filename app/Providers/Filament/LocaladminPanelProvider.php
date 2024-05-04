@@ -19,6 +19,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Models\gym;
 use App\Filament\Pages\Tenancy\RegisterGym;
+use App\Filament\Pages\Tenancy\EditGymProfile;
 class LocaladminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -27,7 +28,6 @@ class LocaladminPanelProvider extends PanelProvider
             ->id('localadmin')
             ->path('localadmin')
             ->login()
-  //          ->tenantProfile(EditTeamProfile::class)
             ->tenant(gym::class)
 
             ->colors([
@@ -54,7 +54,8 @@ class LocaladminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->tenantRegistration(RegisterGym::class)
+  //          ->tenantRegistration(RegisterGym::class)
+            ->tenantProfile(EditGymProfile::class)
 
             ->authMiddleware([
                 Authenticate::class,
