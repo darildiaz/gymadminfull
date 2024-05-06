@@ -37,6 +37,11 @@ class gym extends Model
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
     }
-
+    public function tarifas(){
+        return $this->hasMany(tarifa::class);
+    }
+    public function pagoss(){
+        return $this->hasMany(pagos::class);
+    }
 
 }

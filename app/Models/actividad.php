@@ -22,4 +22,8 @@ class actividad extends Model
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
     }
+    public function tarifas(){
+        return $this->hasMany(tarifa::class);
+    }
+
 }

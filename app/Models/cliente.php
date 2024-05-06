@@ -17,4 +17,7 @@ class cliente extends Model
     public function users(){
         return $this->belongsTo(user::class);
     }
+    public function pagoss(){
+        return $this->hasMany(pagos::class);
+    }
 }

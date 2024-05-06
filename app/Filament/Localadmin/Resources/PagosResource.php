@@ -2,9 +2,9 @@
 
 namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Localadmin\Resources\TarifaResource\Pages;
-use App\Filament\Localadmin\Resources\TarifaResource\RelationManagers;
-use App\Models\Tarifa;
+use App\Filament\Localadmin\Resources\PagosResource\Pages;
+use App\Filament\Localadmin\Resources\PagosResource\RelationManagers;
+use App\Models\Pagos;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,27 +13,40 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TarifaResource extends Resource
+class PagosResource extends Resource
 {
-    protected static ?string $model = Tarifa::class;
+    protected static ?string $model = Pagos::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "pagos";
-    protected static ?string $tenantRelationshipName= 'tarifas';
+    protected static ?string $tenantRelationshipName= 'pagoss';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
+                Forms\Components\DatePicker::make('fecha_inicio')
+                    ->required(),
                 Forms\Components\Select::make('actividads_id')
                     ->required()
                     ->relationship('actividads','descripcion')
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('dias')
+                    Forms\Components\Select::make('clientes_id')
+                    ->required()
+                    ->relationship('clientes','nombre_cliente')
+                    ->searchable()
+                    ->preload(),
+                    Forms\Components\Select::make('tarifa_id')
+                    ->required()
+                    ->relationship('tarifas','dias')
+                    ->searchable()
+                    ->preload(),
+
+                Forms\Components\TextInput::make('sesiones')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('precio')
+                Forms\Components\TextInput::make('importe')
                     ->required()
                     ->numeric(),
             ]);
@@ -43,16 +56,26 @@ class TarifaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('actividads.Descripcion')
+                Tables\Columns\TextColumn::make('fecha_inicio')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('actividads_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('dias')
+                Tables\Columns\TextColumn::make('clientes_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('precio')
+                Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('tarifa_id')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('sesiones')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('importe')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -87,10 +110,10 @@ class TarifaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTarifas::route('/'),
-            'create' => Pages\CreateTarifa::route('/create'),
-            'view' => Pages\ViewTarifa::route('/{record}'),
-            'edit' => Pages\EditTarifa::route('/{record}/edit'),
+            'index' => Pages\ListPagos::route('/'),
+            'create' => Pages\CreatePagos::route('/create'),
+            'view' => Pages\ViewPagos::route('/{record}'),
+            'edit' => Pages\EditPagos::route('/{record}/edit'),
         ];
     }
 }
