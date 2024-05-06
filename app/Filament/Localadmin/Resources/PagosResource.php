@@ -12,6 +12,10 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use App\Models\tarifa;
 
 class PagosResource extends Resource
 {
@@ -29,25 +33,56 @@ class PagosResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('actividads_id')
                     ->required()
-                    ->relationship('actividads','descripcion')
+                    ->relationship(
+                        name: 'actividads',
+                        titleAttribute: 'Descripcion',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                        ->afterStateUpdated(fn(callable $set ) => ('actividads_id' ))
                     ->searchable()
-                    ->preload(),
-                    Forms\Components\Select::make('clientes_id')
+                    ->preload()
+                    ->live(),
+                Forms\Components\Select::make('clientes_id')
                     ->required()
-                    ->relationship('clientes','nombre_cliente')
-                    ->searchable()
+                    ->relationship(
+                        name: 'suscripcions',
+                        titleAttribute: 'clientes.nombre_cliente',
+                        modifyQueryUsing: fn (Builder $query,Forms\Get $get) =>
+                            $query->where('actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id') )
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
+                    ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
                     ->preload(),
-                    Forms\Components\Select::make('tarifa_id')
+                Forms\Components\Select::make('tarifa_id')
                     ->required()
-                    ->relationship('tarifas','dias')
-                    ->searchable()
+                    ->relationship(
+                        name: 'tarifas',
+                        titleAttribute: 'tarifas_id',
+                        modifyQueryUsing: fn (Builder $query,Forms\Get $get) =>
+                        $query->whereBelongsTo(Filament::getTenant())->where('actividads_id', $get('actividads_id') )->orderBy('dias')->orderBy('precio'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "dias:{$record->dias} ({$record->precio})Gs")
+                    ->searchable(['dias', 'precio'])
+                    //->afterStateUpdated(fn ( Model $record, Forms\Set $set) =>  $set('importe', $record->precio) )
+                    ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
+                        //$tarifa=$record1('tarifa');
+                        $tarifa = tarifa::find($get('tarifa_id'));
+                    $set('importe', $tarifa->precio);
+                    $set('sesiones', $tarifa->dias);
+                 })
+                    ->live(onBlur: true)
                     ->preload(),
+
 
                 Forms\Components\TextInput::make('sesiones')
                     ->required()
-                    ->numeric(),
+                    ->dehydrated()
+                    //->disabled()
+                    ->numeric()
+                    ,
                 Forms\Components\TextInput::make('importe')
                     ->required()
+                    ->dehydrated()
+                    //->disabled()
+                    ->suffix('Gs.')
+                    //->default(fn (Forms\Get $get) =>$get('precio'))
                     ->numeric(),
             ]);
     }
@@ -59,13 +94,16 @@ class PagosResource extends Resource
                 Tables\Columns\TextColumn::make('fecha_inicio')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('actividads_id')
+                Tables\Columns\TextColumn::make('actividads.Descripcion')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes_id')
+                Tables\Columns\TextColumn::make('clientes.nombre_cliente')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym_id')
+                Tables\Columns\TextColumn::make('clientes.apellido_cliente')
+                    ->numeric()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('gym.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tarifa_id')

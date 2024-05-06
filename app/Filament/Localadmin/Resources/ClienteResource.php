@@ -68,9 +68,13 @@ class ClienteResource extends Resource
                     ]),
             Forms\Components\TextInput::make('peso')
                 ->required()
+                ->suffix(' Kg')
+
+
                 ->numeric(),
             Forms\Components\TextInput::make('altura')
                 ->required()
+                ->suffix('M')
                 ->numeric(),
             ]);
     }
@@ -79,7 +83,7 @@ class ClienteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('user_id')
+                Tables\Columns\TextColumn::make('users.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_cliente')
@@ -94,10 +98,15 @@ class ClienteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('peso')
                     ->numeric()
+                    ->suffix(' Kg')
+
                     ->sortable(),
                 Tables\Columns\TextColumn::make('altura')
                     ->numeric()
+                    ->suffix(' M')
+
                     ->sortable(),
+
                 Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),

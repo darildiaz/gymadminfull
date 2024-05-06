@@ -17,4 +17,7 @@ class suscripcion extends Model
     public function clientes(){
         return $this->belongsTo(cliente::class);
     }
+    public function pagoss(){
+        return $this->hasMany(pagos::class);
+    }
 }
