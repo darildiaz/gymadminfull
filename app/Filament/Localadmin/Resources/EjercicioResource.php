@@ -18,23 +18,24 @@ class EjercicioResource extends Resource
     protected static ?string $model = Ejercicio::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $tenantRelationshipName= 'ejercicios';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('tipoejercicios_id')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\TextInput::make('nombre_ejercicio')
+                    ->required(),
+                Forms\Components\Select::make('tipoejercicios_id')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('descripcion_ejercicio')
+                    ->relationship('tipoejercicios','nombre')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\RichEditor::make('descripcion_ejercicio')
                     ->required()
+                    ->maxLength(65535)
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 

@@ -17,5 +17,8 @@ class entrenador extends Model
     public function users(){
         return $this->belongsTo(user::class);
     }
+    public function rutinas(){
+        return $this->hasMany(rutina::class);
+    }
 
 }

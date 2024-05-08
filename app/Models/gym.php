@@ -43,5 +43,7 @@ class gym extends Model
     public function pagoss(){
         return $this->hasMany(pagos::class);
     }
-
+    public function ejercicios(){
+        return $this->hasMany(ejercicio::class);
+    }
 }

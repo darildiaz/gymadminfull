@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ejercicio extends Model
 {
     use HasFactory;
+    public function gym(){
+        return $this->belongsTo(gym::class);
+    }
+    public function tipoejercicios(){
+        return $this->hasMany(tipoejercicio::class);
+    }
 }

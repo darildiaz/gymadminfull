@@ -25,5 +25,7 @@ class actividad extends Model
     public function tarifas(){
         return $this->hasMany(tarifa::class);
     }
-
+    public function rutinas(){
+        return $this->hasMany(rutina::class);
+    }
 }
