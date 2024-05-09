@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class suscripcion extends Model
+class visita extends Model
 {
     use HasFactory;
     public function gym(){
@@ -17,10 +17,7 @@ class suscripcion extends Model
     public function clientes(){
         return $this->belongsTo(cliente::class);
     }
-    public function pagoss(){
-        return $this->belongsTo(pagos::class);
-    }
-    public function visitas(){
-        return $this->belongsTo(visita::class);
+    public function suscripcions(){
+        return $this->hasMany(suscripcion::class);
     }
 }

@@ -15,6 +15,6 @@ class tarifa extends Model
         return $this->belongsTo(actividad::class);
     }
     public function pagoss(){
-        return $this->hasMany(pagos::class);
+        return $this->belongsTo(pagos::class);
     }
 }

@@ -12,7 +12,7 @@ class entrenador extends Model
         return $this->belongsTo(gym::class);
     }
     public function actividadentrenador(){
-        return $this->hasMany(actividadentrenador::class);
+        return $this->belongsTo(actividadentrenador::class);
     }
     public function users(){
         return $this->belongsTo(user::class);

@@ -17,7 +17,7 @@ class actividad extends Model
         return $this->hasMany(actividadentrenador::class);
     }
     public function entrenadors(){
-        return $this->belongsTo(entrenador::class);
+        return $this->hasMany(entrenador::class);
     }
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
@@ -27,5 +27,8 @@ class actividad extends Model
     }
     public function rutinas(){
         return $this->hasMany(rutina::class);
+    }
+    public function visitas(){
+        return $this->hasMany(visita::class);
     }
 }

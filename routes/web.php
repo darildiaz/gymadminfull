@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class,'index']);
+Route::get('/inicio/', [HomeController::class,'index']);
+Route::get('/mapas/', [HomeController::class,'mapas']);
+Route::get('/locales/', [HomeController::class,'locales']);
+Route::get('/servicios/', [HomeController::class,'servicios']);
+Route::get('/nosotros/', [HomeController::class,'nosotros']);
+Route::get('/local/{id}', [HomeController::class,'localdet']);

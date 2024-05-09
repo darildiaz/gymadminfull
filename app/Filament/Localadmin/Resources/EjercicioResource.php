@@ -43,12 +43,12 @@ class EjercicioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tipoejercicios_id')
+                Tables\Columns\TextColumn::make('tipoejercicios.nombre')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_ejercicio')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gym_id')
+                Tables\Columns\TextColumn::make('gym.name')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

@@ -78,13 +78,16 @@ class RutinaResource extends Resource
                 Tables\Columns\TextColumn::make('fecha_emision')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clases_id')
+                Tables\Columns\TextColumn::make('actividads.Descripcion')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('entrenadors.nombre_entrenador')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('entrenadors.apellido_entrenador')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('clientes.nombre_cliente')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('entrenadors_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('clientes_id')
+                Tables\Columns\TextColumn::make('clientes.apellido_cliente')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('gym_id')
@@ -101,6 +104,12 @@ class RutinaResource extends Resource
             ])
             ->filters([
                 //
+                Tables\Filters\SelectFilter::make('actividads_id')
+                ->relationship(
+                    name: 'actividads',
+                    titleAttribute: 'Descripcion',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                  //  ->searchable(),
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),

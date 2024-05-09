@@ -19,9 +19,10 @@ class pagos extends Model
         return $this->belongsTo(cliente::class);
     }
     public function tarifas(){
-        return $this->belongsTo(tarifa::class);
+        return $this->hasMany(tarifa::class);
     }
+    
     public function suscripcions(){
-        return $this->belongsTo(suscripcion::class);
+        return $this->hasMany(suscripcion::class);
     }
 }
