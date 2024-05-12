@@ -52,4 +52,16 @@ class gym extends Model
     public function visitas(){
         return $this->hasMany(visita::class);
     }
+    public function categoriaprods(){
+        return $this->hasMany(categoriaprod::class);
+    }
+    public function productos(){
+        return $this->hasMany(producto::class);
+    }
+    public function ventas(){
+        return $this->hasMany(venta::class);
+    }
+    public function movimientos(){
+        return $this->hasMany(movimiento::class);
+    }
 }

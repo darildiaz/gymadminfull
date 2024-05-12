@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
 class ClienteResource extends Resource
 {
@@ -25,10 +26,18 @@ class ClienteResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('users_id')
+                    ->required()
+                    ->relationship(
+                        name: 'users',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                    ->searchable()
+                    ->preload(),
+                /*Forms\Components\Select::make('users_id')
                 ->required()
                 ->relationship('users','name')
                    ->searchable()
-                /*->createOptionForm([
+                ->createOptionForm([
                     Forms\Components\TextInput::make('name')
                     ->required(),
                     Forms\Components\TextInput::make('email')
@@ -39,10 +48,10 @@ class ClienteResource extends Resource
                     ->hiddenOn('edit')
                     ->required(),
                     //Forms\Components\select::make('roles')->multiple()->relationship('roles','name')
-                ])*/
+                ])
 
                 ->preload(),
-
+*/
                 Forms\Components\TextInput::make('nombre_cliente')
                 ->required()
                 ->maxLength(191),

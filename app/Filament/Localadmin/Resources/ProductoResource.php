@@ -2,9 +2,9 @@
 
 namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Localadmin\Resources\SuscripcionResource\Pages;
-use App\Filament\Localadmin\Resources\SuscripcionResource\RelationManagers;
-use App\Models\Suscripcion;
+use App\Filament\Localadmin\Resources\ProductoResource\Pages;
+use App\Filament\Localadmin\Resources\ProductoResource\RelationManagers;
+use App\Models\Producto;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -14,40 +14,39 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Facades\Filament;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
-use App\Models\cliente;
-class SuscripcionResource extends Resource
+class ProductoResource extends Resource
 {
-    protected static ?string $model = Suscripcion::class;
-
+    protected static ?string $model = Producto::class;
+    protected static ?string $navigationGroup = "Ventas";
+    protected static ?string $tenantRelationshipName= 'productos';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Clientes";
-    protected static ?string $tenantRelationshipName= 'suscripcions';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('actividads_id')
+                Forms\Components\TextInput::make('nombre')
                     ->required()
-                    ->relationship('actividads','descripcion')
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\Select::make('clientes_id')
+                    ->maxLength(255),
+                    Forms\Components\RichEditor::make('descripcion')
+                    ->required()
+                    ->maxLength(65535)
+                    ->columnSpanFull(),
+                Forms\Components\TextInput::make('precio')
+                    ->suffix('Gs.')
+                    ->numeric(),
+                Forms\Components\Select::make('categoriaprods_id')
                     ->required()
                     ->relationship(
-                        name: 'clientes',
+                        name: 'categoriaprods',
                         titleAttribute: 'nombre',
                         modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
-                        ->afterStateUpdated(fn(callable $set ) => ('clientes_id'))
-                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
-                        ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
+                        ->afterStateUpdated(fn(callable $set ) => ('categoriaprods_id'))
+                    ->searchable()
                     ->preload()
                     ->live(),
-/*
-                Forms\Components\Toggle::make('habilitado')
-                    ->required(),*/
+                Forms\Components\Toggle::make('is_visible')
+                    ->required(),
             ]);
     }
 
@@ -55,16 +54,18 @@ class SuscripcionResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('actividads.Descripcion')
+                Tables\Columns\TextColumn::make('nombre')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('descripcion')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('precio')
+                    ->numeric()
+                    ->suffix(' Gs.')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes.nombre_cliente')
+                Tables\Columns\TextColumn::make('categoriaprods.nombre')
+                    ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes.apellido_cliente')
-                    ->sortable(),
-
-                Tables\Columns\TextColumn::make('gym.name')
-                    ->sortable(),
-                Tables\Columns\IconColumn::make('habilitado')
+                Tables\Columns\IconColumn::make('is_visible')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -99,10 +100,10 @@ class SuscripcionResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListSuscripcions::route('/'),
-            'create' => Pages\CreateSuscripcion::route('/create'),
-            'view' => Pages\ViewSuscripcion::route('/{record}'),
-            'edit' => Pages\EditSuscripcion::route('/{record}/edit'),
+            'index' => Pages\ListProductos::route('/'),
+            'create' => Pages\CreateProducto::route('/create'),
+            'view' => Pages\ViewProducto::route('/{record}'),
+            'edit' => Pages\EditProducto::route('/{record}/edit'),
         ];
     }
 }

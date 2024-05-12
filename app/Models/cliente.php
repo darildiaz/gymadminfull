@@ -23,4 +23,8 @@ class cliente extends Model
     public function visitas(){
         return $this->hasMany(visita::class);
     }
+    public function ventas(): HasMany{
+
+        return $this->hasMany(venta::class);
+    }
 }

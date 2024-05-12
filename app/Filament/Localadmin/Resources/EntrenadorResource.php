@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
 class EntrenadorResource extends Resource
 {
@@ -26,7 +27,10 @@ class EntrenadorResource extends Resource
             ->schema([
                 Forms\Components\Select::make('users_id')
                     ->required()
-                    ->relationship('users','name')
+                    ->relationship(
+                        name: 'users',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('nombre_entrenador')

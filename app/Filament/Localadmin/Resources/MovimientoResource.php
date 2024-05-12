@@ -2,9 +2,9 @@
 
 namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Localadmin\Resources\TarifaResource\Pages;
-use App\Filament\Localadmin\Resources\TarifaResource\RelationManagers;
-use App\Models\Tarifa;
+use App\Filament\Localadmin\Resources\MovimientoResource\Pages;
+use App\Filament\Localadmin\Resources\MovimientoResource\RelationManagers;
+use App\Models\Movimiento;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -12,34 +12,34 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Facades\Filament;
 
-class TarifaResource extends Resource
+class MovimientoResource extends Resource
 {
-    protected static ?string $model = Tarifa::class;
-
+    protected static ?string $model = Movimiento::class;
+    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $tenantRelationshipName= 'movimientos';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "pagos";
-    protected static ?string $tenantRelationshipName= 'tarifas';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('actividads_id')
+                Forms\Components\TextInput::make('venta_id')
+                //    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('pagoss_id')
+                 //   ->required()
+                    ->numeric(),
+                    Forms\Components\Select::make('formapagos_id')
                     ->required()
                     ->relationship(
-                        name: 'actividads',
-                        titleAttribute: 'descripcion',
-                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                        name: 'formapagos',
+                        titleAttribute: 'nombre'
+                        )
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('dias')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('precio')
-                    ->required()
-                    ->suffix('Gs.')
+                Forms\Components\TextInput::make('importe')
+                ->required()
                     ->numeric(),
             ]);
     }
@@ -48,15 +48,17 @@ class TarifaResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('actividads.Descripcion')
+                Tables\Columns\TextColumn::make('venta_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('dias')
+                Tables\Columns\TextColumn::make('pagoss_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('precio')
+                Tables\Columns\TextColumn::make('formapagos_id')
                     ->numeric()
-                    ->suffix('Gs.')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('importe')
+                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -91,10 +93,10 @@ class TarifaResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTarifas::route('/'),
-            'create' => Pages\CreateTarifa::route('/create'),
-            'view' => Pages\ViewTarifa::route('/{record}'),
-            'edit' => Pages\EditTarifa::route('/{record}/edit'),
+            'index' => Pages\ListMovimientos::route('/'),
+            'create' => Pages\CreateMovimiento::route('/create'),
+            'view' => Pages\ViewMovimiento::route('/{record}'),
+            'edit' => Pages\EditMovimiento::route('/{record}/edit'),
         ];
     }
 }

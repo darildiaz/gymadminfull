@@ -62,11 +62,10 @@ class PagosResource extends Resource
                     ->searchable(['dias', 'precio'])
                     //->afterStateUpdated(fn ( Model $record, Forms\Set $set) =>  $set('importe', $record->precio) )
                     ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
-                        //$tarifa=$record1('tarifa');
                         $tarifa = tarifa::find($get('tarifa_id'));
-                    $set('importe', $tarifa->precio);
-                    $set('sesiones', $tarifa->dias);
-                 })
+                        $set('importe', $tarifa->precio);
+                        $set('sesiones', $tarifa->dias);
+                    })
                     ->live(onBlur: true)
                     ->preload(),
 
@@ -114,6 +113,8 @@ class PagosResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('importe')
                     ->numeric()
+                    ->suffix(' Gs.')
+
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

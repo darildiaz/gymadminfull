@@ -12,7 +12,11 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use App\Models\entrenador;
 class ActividadResource extends Resource
 {
     protected static ?string $model = Actividad::class;
@@ -56,10 +60,13 @@ class ActividadResource extends Resource
                             ->required()
                             ->relationship(
                                 name: 'entrenadors',
-                                titleAttribute: 'nombre_entrenador',
-                                )
-                            ->searchable()
-                            ->preload(),
+                                titleAttribute: 'nombre',
+                                modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                                ->afterStateUpdated(fn(callable $set ) => ('entrenadors_id'))
+                                ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_entrenador} apellido: {$record->apellido_entrenador}")
+                                ->searchable('entrenadors.nombre_entrenador','entrenadors.apellido_entrenador')
+                            ->preload()
+                            ->live(),
                     ]),
             ]);
     }

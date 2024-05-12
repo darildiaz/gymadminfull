@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('categoriaprods', function (Blueprint $table) {
             $table->id();
             $table->string('nombre');
+            $table->foreignId('gym_id')
+            ->contrained('gyms')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
             $table->timestamps();
         });
     }

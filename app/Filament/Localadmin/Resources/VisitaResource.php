@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 class VisitaResource extends Resource
 {
     protected static ?string $model = Visita::class;
+    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $tenantRelationshipName= 'visitas';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

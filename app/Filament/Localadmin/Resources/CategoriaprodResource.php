@@ -2,9 +2,9 @@
 
 namespace App\Filament\Localadmin\Resources;
 
-use App\Filament\Localadmin\Resources\EjercicioResource\Pages;
-use App\Filament\Localadmin\Resources\EjercicioResource\RelationManagers;
-use App\Models\Ejercicio;
+use App\Filament\Localadmin\Resources\CategoriaprodResource\Pages;
+use App\Filament\Localadmin\Resources\CategoriaprodResource\RelationManagers;
+use App\Models\Categoriaprod;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,29 +13,20 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class EjercicioResource extends Resource
+class CategoriaprodResource extends Resource
 {
-    protected static ?string $model = Ejercicio::class;
-
+    protected static ?string $model = Categoriaprod::class;
+    protected static ?string $navigationGroup = "Ventas";
+    protected static ?string $tenantRelationshipName= 'categoriaprods';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Rutinas";
-    protected static ?string $tenantRelationshipName= 'ejercicios';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nombre_ejercicio')
-                    ->required(),
-                Forms\Components\Select::make('tipoejercicios_id')
+                Forms\Components\TextInput::make('nombre')
                     ->required()
-                    ->relationship('tipoejercicios','nombre')
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\RichEditor::make('descripcion_ejercicio')
-                    ->required()
-                    ->maxLength(65535)
-                    ->columnSpanFull(),
+                    ->maxLength(255),
             ]);
     }
 
@@ -43,10 +34,7 @@ class EjercicioResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('tipoejercicios.nombre')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nombre_ejercicio')
+                Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -81,10 +69,10 @@ class EjercicioResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEjercicios::route('/'),
-            'create' => Pages\CreateEjercicio::route('/create'),
-            'view' => Pages\ViewEjercicio::route('/{record}'),
-            'edit' => Pages\EditEjercicio::route('/{record}/edit'),
+            'index' => Pages\ListCategoriaprods::route('/'),
+            'create' => Pages\CreateCategoriaprod::route('/create'),
+            'view' => Pages\ViewCategoriaprod::route('/{record}'),
+            'edit' => Pages\EditCategoriaprod::route('/{record}/edit'),
         ];
     }
 }

@@ -19,7 +19,7 @@ class RutinaResource extends Resource
     protected static ?string $model = Rutina::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $navigationGroup = "Rutinas";
     protected static ?string $tenantRelationshipName= 'Rutinas';
     public static function form(Form $form): Form
     {
@@ -61,6 +61,7 @@ class RutinaResource extends Resource
                     modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
                 ->searchable()
                 ->preload(),
+                
                 Forms\Components\TextInput::make('repeticion')
                 ->required()
                 ->maxLength(191),
@@ -88,9 +89,6 @@ class RutinaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('clientes.apellido_cliente')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
