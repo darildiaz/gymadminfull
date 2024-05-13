@@ -43,12 +43,12 @@ class UserResource extends Resource
 
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\TextInput::make('password1')
+                    /*Forms\Components\TextInput::make('password1')
                     ->password()
                 ->hiddenOn('edit')
 
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(255),*/
 
                 Forms\Components\Select::make('gym_id')
                // ->required()

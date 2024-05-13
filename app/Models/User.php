@@ -64,7 +64,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     {
 
        // return $this->gyms()->contains($tenant);
-        return $this->gyms()->whereKey($tenant)->exists();
+        return $this->gyms()->whereKey($tenant)->where('habilitado',true)->exists();
     }
 
     public function canAccessPanel (Panel $panel): bool
@@ -86,6 +86,9 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     }
     public function entrenadors(){
         return $this->hasMany(entrenador::class);
+    }
+    public function gym_users(){
+        return $this->hasMany(gym_user::class,'user_id');
     }
 
 }

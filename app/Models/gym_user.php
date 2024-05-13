@@ -11,13 +11,12 @@ class gym_user extends Pivot
 {
     use HasFactory;
     public function users(): BelongsTo{
-        return $this->belongsTo(user::class);
+        return $this->belongsTo(user::class,'user_id');
     }
-    /*public function rutinas(){
-        return $this->belongsTo(rutina::class);
-    }*/
+
     public function gyms()
     {
         return $this->belongsTo(gym::class);
     }
+    
 }

@@ -23,7 +23,7 @@
                         </div>
                         <div class="bg-white flex flex-col justify-start p-6">
                             <h1>{{ $gym->nombre }}</h1>
-                            @if($gym->clases->count() > 0)
+                            @if($gym->actividads->count() > 0)
                                 <table class="min-w-full bg-white border border-gray-300 shadow-md rounded-md overflow-hidden">
                                     <thead class="bg-blue-700 text-white">
                                         <tr>
@@ -41,20 +41,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($gym->clases as $clase)
+                                        @foreach($gym->actividads as $actividad)
                                             <tr>
-                                                <td class="py-2 px-4">{{ $clase->nombre_clase }}</td>
-                                                <td class="py-2 px-4">{{ $clase->cupo }}</td>
-                                                <td class="py-2 px-4">{{ $clase->horario }}</td>
-                                                <td class="py-2 px-4">{{ $clase->lunes ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->martes ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->miercoles ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->jueves ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->vienes ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->sabado ? 'Sí' : 'No' }}</td>
-                                                <td class="py-2 px-4">{{ $clase->domingo ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->Descripcion }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->cupo }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->horario }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->lunes ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->martes ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->miercoles ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->jueves ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->vienes ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->sabado ? 'Sí' : 'No' }}</td>
+                                                <td class="py-2 px-4">{{ $actividad->domingo ? 'Sí' : 'No' }}</td>
                                                 <td class="py-2 px-4">
-                                                    <button class="bg-blue-500 text-white px-4 py--2 rounded-md">inscribirse</button>
+                                                    <!--button class="bg-blue-500 text-white px-4 py--2 rounded-md">inscribirse</button-->
                                                 </td>
                                             </tr>
                                         @endforeach

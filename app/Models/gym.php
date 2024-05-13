@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class gym extends Model
 {
     use HasFactory;
-    public function members(){
+    /*public function members(){
         return $this->belongsToMany(User::class,'gym_user','gym_id','user_id');
-    }
+    }*/
 
     public function categorias()
     {

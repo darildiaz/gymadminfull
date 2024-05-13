@@ -49,12 +49,17 @@ class GymResource extends Resource
                 Forms\Components\Repeater::make('gym_user')
                     ->relationship()
                     ->schema([
-                    Forms\Components\Select::make('user_id')
-                        ->required()
-                        ->relationship(
-                            name: 'users',
-                            titleAttribute: 'name',
+                       /* Forms\Components\TextInput::make('user_id')
+                            ->required()
+                    ->numeric(),
+*/
+                        Forms\Components\Select::make('user_id')
+                            ->required()
+                            ->relationship(
+                                name: 'users',
+                                titleAttribute: 'name',
                             )
+                            
                         ->searchable()
                         ->preload(),
                     ])

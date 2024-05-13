@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class FormapagoResource extends Resource
 {
     protected static ?string $model = Formapago::class;
+    protected static ?string $navigationGroup = "Mantenimiento";
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

@@ -25,7 +25,7 @@ class HomeController extends Controller
         return view('servicios');
     }
     public function localdet($id){
-     $gym = Gym::with('clases')->where('id', $id)->first();
+     $gym = Gym::with('actividads')->where('id', $id)->first();
 
      return view('localdet',['gym'=>$gym]);
     }
