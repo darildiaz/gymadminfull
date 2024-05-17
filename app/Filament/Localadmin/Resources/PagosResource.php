@@ -81,8 +81,35 @@ class PagosResource extends Resource
                     ->dehydrated()
                     //->disabled()
                     ->suffix('Gs.')
-                    //->default(fn (Forms\Get $get) =>$get('precio'))
                     ->numeric(),
+                    Forms\Components\Section::make()
+                ->schema([
+                Forms\Components\Repeater::make('movimientos')
+                    ->relationship()
+                    ->schema([
+                        Forms\Components\Select::make('formapagos_id')
+                        ->required()
+                        ->relationship(
+                            name: 'formapagos',
+                            titleAttribute: 'nombre'
+                            )
+                        ->searchable()
+                        ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
+                            $set('gym_id',   Filament::getTenant());
+                            })
+                        ->preload(),
+                        Forms\Components\TextInput::make('importe')
+                            ->required()
+                            ->numeric(),
+                        /*Forms\Components\TextInput::make('gym_id')
+                    ->dehydrated()
+
+                            ->required(),
+                            //->default($tenant)
+                            //->hide(),
+*/
+                            ])->columns(3)
+                    ])->columns(1),
             ]);
     }
 

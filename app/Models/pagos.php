@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 
 class pagos extends Model
@@ -24,5 +25,9 @@ class pagos extends Model
     
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
+    }
+    public function movimientos(): HasMany{
+
+        return $this->hasMany(movimiento::class, 'pagoss_id');
     }
 }

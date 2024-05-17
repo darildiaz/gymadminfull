@@ -12,6 +12,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Cheesegrits\FilamentGoogleMaps\Fields\Map;
 
 class GymResource extends Resource
 {
@@ -27,14 +28,59 @@ class GymResource extends Resource
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('longitud')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\TextInput::make('latitud')
-                    ->required()
-                    ->numeric(),
+                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('location', [
+                             'lat' => floatVal($get('latitud')),
+                             'lng' => floatVal($get('longitud')),
+                         ]);
+                     })
+                     ->live(onBlur: true)
+                     ->reactive()
+                     ->lazy(),
+                 Forms\Components\TextInput::make('longitud')
+                     ->reactive()
+                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('location', [
+                             'lat' => floatval($get('latitud')),
+                             'lng' => floatVal($get('longitud')),
+                         ]);
+                     })
+                     ->live(onBlur: true)
+                     ->lazy(),     
+                 Map::make('location')
+                    -> defaultLocation([ 'latitud','longitud'])
+                    ->reactive()
+                    ->live(onBlur: true)
+                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('latitud', $state['lat']);
+                         $set('longitud', $state['lng']);
+                     })->drawingControl()
+                     ->lazy()
+                     ->defaultLocation(function ($record) {
+                         if ($record) {
+                             return [$record->latitud, $record->longitud];
+                         }
+                         return [-23.3998500, -57.4323600]; // Puedes reemplazar esto con una ubicación por defecto si lo prefieres
+                     })
+                     ->mapControls([
+                         'zoomControl' => true,
+                     ])
+                     ->debug()
+                     ->clickable()
+                     ->autocompleteReverse()
+                     ->reverseGeocode([
+                         'city'   => '%L',
+                         'zip'    => '%z',
+                         'state'  => '%A1',
+                         'street' => '%n %S',
+                     ])
+                     ->geolocate()
+                     ->columnSpan(2),
                 Forms\Components\RichEditor::make('descripcion')
                     ->required()
+                    ->live(onBlur: true)
+
                     ->maxLength(65535)
                     ->columnSpanFull(),
                     Forms\Components\Toggle::make('habilitado'),
@@ -49,10 +95,7 @@ class GymResource extends Resource
                 Forms\Components\Repeater::make('gym_user')
                     ->relationship()
                     ->schema([
-                       /* Forms\Components\TextInput::make('user_id')
-                            ->required()
-                    ->numeric(),
-*/
+                       
                         Forms\Components\Select::make('user_id')
                             ->required()
                             ->relationship(

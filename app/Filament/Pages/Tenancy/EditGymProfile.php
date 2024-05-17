@@ -5,6 +5,8 @@ use App\Models\Gym;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms;
+use Cheesegrits\FilamentGoogleMaps\Fields\Map;
+
 //use Filament\Pages\Tenancy\RegisterTenant;
 use Filament\Pages\Tenancy\EditTenantProfile;
 
@@ -22,12 +24,57 @@ class EditGymProfile extends EditTenantProfile
                 Forms\Components\TextInput::make('name')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('longitud')
-                    ->required()
-                    ->numeric(),
                 Forms\Components\TextInput::make('latitud')
-                    ->required()
-                    ->numeric(),
+                    ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('location', [
+                             'lat' => floatVal($get('latitud')),
+                             'lng' => floatVal($get('longitud')),
+                         ]);
+                     })
+                     ->reactive()
+                     ->lazy(),
+     
+                 Forms\Components\TextInput::make('longitud')
+                     ->reactive()
+                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('location', [
+                             'lat' => floatval($get('latitud')),
+                             'lng' => floatVal($get('longitud')),
+                         ]);
+                     })
+     
+                     ->lazy(),
+     
+                 Map::make('location')
+                -> defaultLocation([ 'latitud','longitud'])
+                     ->reactive()
+                     ->live(onBlur: true)
+
+                     ->afterStateUpdated(function ($state, callable $get, callable $set) {
+                         $set('latitud', $state['lat']);
+                         $set('longitud', $state['lng']);
+                     })->drawingControl()
+                     ->lazy()
+                     ->defaultLocation(function ($record) {
+                         if ($record) {
+                             return [$record->latitud, $record->longitud];
+                         }
+                         return [-23.3998500, -57.4323600]; // Puedes reemplazar esto con una ubicación por defecto si lo prefieres
+                     })
+                     ->mapControls([
+                         'zoomControl' => true,
+                     ])
+                     ->debug()
+                     ->clickable()
+                     ->autocompleteReverse()
+                     ->reverseGeocode([
+                         'city'   => '%L',
+                         'zip'    => '%z',
+                         'state'  => '%A1',
+                         'street' => '%n %S',
+                     ])
+                     ->geolocate()
+                     ->columnSpan(2),
                 Forms\Components\RichEditor::make('descripcion')
                     ->required()
                     ->maxLength(65535)

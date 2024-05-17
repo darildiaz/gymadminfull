@@ -18,6 +18,7 @@ return new class extends Migration
             $table->double('latitud');
             $table->text('descripcion');
             $table->text('imagen');
+            $table->text('location');
             $table->foreignId('categorias_id')
             ->contrained('categorias')
             ->cascadeOnUpdate()
