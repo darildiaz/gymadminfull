@@ -13,12 +13,12 @@ use Filament\Models\Contracts\HasTenants;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
-
+use Althinect\FilamentSpatieRolesPermissions\Concerns\HasSuperAdmin;
 
 class User extends Authenticatable implements FilamentUser, HasTenants
 {
     use HasApiTokens, HasFactory, Notifiable;
-
+    use HasSuperAdmin;
     /**
      * The attributes that are mass assignable.
      *
@@ -39,7 +39,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         'password',
         'remember_token',
     ];
-
+    
     /**
      * The attributes that should be cast.
      *

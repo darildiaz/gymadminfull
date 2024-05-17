@@ -56,6 +56,8 @@ class UserResource extends Resource
                 ->searchable()
                 ->preload(),
                 Forms\Components\Toggle::make('isadmin'),
+                Forms\Components\Select::make('roles')->multiple()->relationship('roles', 'name')
+                
 
             ]);
     }
