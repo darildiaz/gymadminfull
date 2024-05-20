@@ -66,4 +66,10 @@ class gym extends Model
     public function movimientos(){
         return $this->hasMany(movimiento::class);
     }
+    public function comidas(){
+        return $this->hasMany(movimiento::class);
+    }
+    public function dietas(){
+        return $this->hasMany(movimiento::class);
+    }
 }

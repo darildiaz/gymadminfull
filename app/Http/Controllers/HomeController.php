@@ -14,8 +14,10 @@ class HomeController extends Controller
 
     }
     public function index(){
+        
+        $gyms= gym::all();
         $sliders= slider::all();
-        return view('inicio',['sliders'=>$sliders]);
+        return view('inicio',['sliders'=>$sliders,'gyms'=>$gyms]);
 
     }
     public function nosotros(){

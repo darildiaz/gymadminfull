@@ -129,9 +129,6 @@ class PagosResource extends Resource
                 Tables\Columns\TextColumn::make('clientes.apellido_cliente')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('tarifa_id')
                     ->numeric()
                     ->sortable(),
@@ -141,7 +138,6 @@ class PagosResource extends Resource
                 Tables\Columns\TextColumn::make('importe')
                     ->numeric()
                     ->suffix(' Gs.')
-
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Localadmin\Resources;
+namespace App\Filament\Clientesadmin\Resources;
 
-use App\Filament\Localadmin\Resources\MovimientoResource\Pages;
-use App\Filament\Localadmin\Resources\MovimientoResource\RelationManagers;
-use App\Models\Movimiento;
+use App\Filament\Clientesadmin\Resources\RutinaResource\Pages;
+use App\Filament\Clientesadmin\Resources\RutinaResource\RelationManagers;
+use App\Models\Rutina;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,33 +13,29 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class MovimientoResource extends Resource
+class RutinaResource extends Resource
 {
-    protected static ?string $model = Movimiento::class;
-    protected static ?string $navigationGroup = "Gyms";
-    protected static ?string $tenantRelationshipName= 'movimientos';
+    protected static ?string $model = Rutina::class;
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('venta_id')
-                //    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('pagoss_id')
-                 //   ->required()
-                    ->numeric(),
-                    Forms\Components\Select::make('formapagos_id')
+                Forms\Components\DatePicker::make('fecha_emision')
+                    ->required(),
+                Forms\Components\TextInput::make('actividads_id')
                     ->required()
-                    ->relationship(
-                        name: 'formapagos',
-                        titleAttribute: 'nombre'
-                        )
-                    ->searchable()
-                    ->preload(),
-                Forms\Components\TextInput::make('importe')
-                ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('entrenadors_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('clientes_id')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('gym_id')
+                    ->required()
                     ->numeric(),
             ]);
     }
@@ -48,16 +44,19 @@ class MovimientoResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('venta_id')
+                Tables\Columns\TextColumn::make('fecha_emision')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('actividads_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('pagoss_id')
+                Tables\Columns\TextColumn::make('entrenadors_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('formapagos.nombre')
+                Tables\Columns\TextColumn::make('clientes_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('importe')
+                Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -93,10 +92,10 @@ class MovimientoResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListMovimientos::route('/'),
-            'create' => Pages\CreateMovimiento::route('/create'),
-            'view' => Pages\ViewMovimiento::route('/{record}'),
-            'edit' => Pages\EditMovimiento::route('/{record}/edit'),
+            'index' => Pages\ListRutinas::route('/'),
+            'create' => Pages\CreateRutina::route('/create'),
+            'view' => Pages\ViewRutina::route('/{record}'),
+            'edit' => Pages\EditRutina::route('/{record}/edit'),
         ];
     }
 }

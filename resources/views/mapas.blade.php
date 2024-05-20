@@ -34,7 +34,7 @@
             marker.addListener('click', function() {
                 // Aquí puedes mostrar los detalles del gimnasio
                 // Por ejemplo, podrías abrir un modal o un popup
-                alert("Detalles del gimnasio: " + marker.title);
+               // alert("Detalles del gimnasio: " + marker.title);
                 window.location.href = 'local/' + {{ $gym->id }};
             });
             @endforeach

@@ -30,10 +30,11 @@ class VentaResource extends Resource
     {
         return $form
             ->schema([
+                
                 Forms\Components\Section::make()
                 ->schema([
                     Forms\Components\DatePicker::make('fecha')
-                        
+                    //->readonly()
                     ->required(),
                     Forms\Components\Select::make('clientes_id')
                         ->required()
@@ -112,6 +113,12 @@ class VentaResource extends Resource
                         Forms\Components\TextInput::make('total')
                             //->disabled()
                             ->suffix('Gs.')
+                            ->disabled()
+
+                            ->numeric(),
+                            Forms\Components\TextInput::make('totalpagado')
+                            ->required()
+                            ->disabled()
 
                             ->numeric(),
                 ])->columns(2),
@@ -131,13 +138,25 @@ class VentaResource extends Resource
                         Forms\Components\TextInput::make('importe')
                             ->required()
                             ->numeric(),
-                        Forms\Components\TextInput::make('gym_id')
+                        Forms\Components\Hidden::make('gym_id')
+                        ->default(Filament::getTenant()->id),
+                        /*Forms\Components\TextInput::make('')
                             ->required()
                             ->default(1)
-                            //->disabled(),
-
+                            ->disabled(),
+*/
                             ])->columns(3)
-                    ])->columns(1),
+                    ])->columns(1)->live(onBlur: true)
+
+                    ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
+                      //  $set('subtotal', $get('cantidad')*$get('precio'));
+                        //$set('total', 1000);
+                        self::updatepagos( $get, $set);
+
+                        self::updateTotals( $get, $set);
+                        //self::updateLineTotal($get, $set);
+                    }),
+                    
                     
             ]);
     }
@@ -226,6 +245,18 @@ class VentaResource extends Resource
         //$set('sub_total', number_format($subtotal, 2, '.', ''));
         //$set('total', number_format($subtotal - ($subtotal - ($get('discount'))) + ($subtotal * ($get('tax') / 100)), 2, '.', ''));
         $set('total', number_format($subtotal1 -($subtotal1 * $get('descuento')/100), 2, '.', ''));
+
+    }
+    public static function updatepagos(Forms\Get $get, Forms\Set $set): void {
+        $lineItems = $get('movimientos');
+        $subtotal1 = 0;
+        foreach($lineItems as $item) {
+           
+
+            $subtotal1 += $item['importe'];
+
+        }
+        $set('totalpagado', number_format($subtotal1, 2, '.', ''));
 
     }
 }

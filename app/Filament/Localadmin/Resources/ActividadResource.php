@@ -31,6 +31,8 @@ class ActividadResource extends Resource
     {
         return $form
             ->schema([
+                Forms\Components\Section::make()
+                ->schema([
                 Forms\Components\TextInput::make('Descripcion')
                     ->required()
                     ->maxLength(255),
@@ -39,6 +41,9 @@ class ActividadResource extends Resource
                     ->numeric(),
                 Forms\Components\TimePicker::make('horario')
                     ->required(),
+                ])->columns(3),
+                Forms\Components\Section::make('Dias de actividades')
+                ->schema([
                 Forms\Components\Toggle::make('lunes')
                     ->required(),
                 Forms\Components\Toggle::make('martes')
@@ -53,10 +58,15 @@ class ActividadResource extends Resource
                     ->required(),
                 Forms\Components\Toggle::make('domingo')
                     ->required(),
-                Forms\Components\Repeater::make('Actividadentrenador')
+                    ])->columns(3),
+                
+                Forms\Components\Repeater::make('Actividadentrenador',)
+                    ->label('Entrenadores')
                     ->relationship()
                     ->schema([
                         Forms\Components\Select::make('entrenador_id')
+                    ->label('Entrenador')
+
                             ->required()
                             ->relationship(
                                 name: 'entrenadors',
@@ -75,9 +85,7 @@ class ActividadResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('gym.name')
-                    ->numeric()
-                    ->sortable(),
+                
                 Tables\Columns\TextColumn::make('Descripcion')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('cupo')

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\Localadmin\Resources;
+namespace App\Filament\Clientesadmin\Resources;
 
-use App\Filament\Localadmin\Resources\ClienteResource\Pages;
-use App\Filament\Localadmin\Resources\ClienteResource\RelationManagers;
+use App\Filament\Clientesadmin\Resources\ClienteResource\Pages;
+use App\Filament\Clientesadmin\Resources\ClienteResource\RelationManagers;
 use App\Models\Cliente;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -12,79 +12,47 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Filters\Filter;
 use Filament\Facades\Filament;
-
 class ClienteResource extends Resource
 {
     protected static ?string $model = Cliente::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationGroup = "Clientes";
-    protected static ?string $tenantRelationshipName= 'clientes';
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('users_id')
+                Forms\Components\TextInput::make('users_id')
                     ->required()
-                    ->relationship(
-                        name: 'users',
-                        titleAttribute: 'name',
-                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
-                    ->searchable()
-                    ->preload(),
-                /*Forms\Components\Select::make('users_id')
-                ->required()
-                ->relationship('users','name')
-                   ->searchable()
-                ->createOptionForm([
-                    Forms\Components\TextInput::make('name')
-                    ->required(),
-                    Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
-                    Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->hiddenOn('edit')
-                    ->required(),
-                    //Forms\Components\select::make('roles')->multiple()->relationship('roles','name')
-                ])
-
-                ->preload(),
-*/
+                    ->numeric(),
                 Forms\Components\TextInput::make('nombre_cliente')
-                ->required()
-                ->maxLength(191),
-            Forms\Components\TextInput::make('apellido_cliente')
-                ->required()
-                ->maxLength(191),
-            Forms\Components\TextInput::make('telefono')
-            ->tel()
-            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
-                ->required()
-                ->maxLength(15),
-            Forms\Components\TextInput::make('telefono_emergencia')
-            ->tel()
-            ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
-                ->required()
-                ->maxLength(15),
-                Forms\Components\Select::make('Sexo')
-                ->required()
-                ->options([
-                    'femenino' => 'Femenino',
-                    'masculino' => 'Masculino',
-                    'otro' => 'Otro',
-                    ]),
-            Forms\Components\TextInput::make('peso')
-                ->required()
-                ->suffix(' Kg')
-
-
-                ->numeric(),
-            Forms\Components\TextInput::make('altura')
-                ->required()
-                ->suffix('M')
-                ->numeric(),
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('apellido_cliente')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('telefono')
+                    ->tel()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('telefono_emergencia')
+                    ->tel()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('Sexo')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('peso')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('altura')
+                    ->required()
+                    ->numeric(),
+                Forms\Components\TextInput::make('gym_id')
+                    ->required()
+                    ->numeric(),
             ]);
     }
 
@@ -92,7 +60,7 @@ class ClienteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('users.name')
+                Tables\Columns\TextColumn::make('users_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_cliente')
@@ -107,16 +75,13 @@ class ClienteResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('peso')
                     ->numeric()
-                    ->suffix(' Kg')
-
                     ->sortable(),
                 Tables\Columns\TextColumn::make('altura')
                     ->numeric()
-                    ->suffix(' M')
-
                     ->sortable(),
-
-               
+                Tables\Columns\TextColumn::make('gym_id')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -127,8 +92,8 @@ class ClienteResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
-            ])
+                Filter::make('users_id')->default(Filament::getTenant()->id),
+            ])->hiddenFilterIndicators()
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

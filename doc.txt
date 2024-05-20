@@ -1,0 +1,9 @@
+grafica de ventas
+grafica de visitas
+
+menu clientes
+    suscripcion
+    rutinas
+    pagos
+    dieta
+
