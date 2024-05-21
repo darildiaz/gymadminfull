@@ -18,7 +18,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\cliente;
 use App\Models\producto;
-use Filament\Tables\Actions\CreateAction;
+//use Filament\Tables\Actions\CreateAction;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Blade;
 class VentaResource extends Resource
 {
     protected static ?string $model = Venta::class;
@@ -197,12 +199,17 @@ class VentaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                CreateAction::make()
-                ->mutateFormDataUsing(function (array $data): array {
-                    $data['user_id'] = auth()->id();
-
-                    return $data;
-                })
+                tables\Actions\Action::make('pdf') 
+                    ->label('PDF')
+                    ->color('success')
+                   // ->icon('heroicon-s-download')
+                    ->action(function (Model $record) {
+                        return response()->streamDownload(function () use ($record) {
+                            echo Pdf::loadHtml(
+                                Blade::render('pdf', ['record' => $record])
+                            )->stream();
+                        },'comprobante'. $record->id . '.pdf');
+                    }), 
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
