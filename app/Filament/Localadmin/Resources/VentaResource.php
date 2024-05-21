@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\cliente;
 use App\Models\producto;
-
+use Filament\Tables\Actions\CreateAction;
 class VentaResource extends Resource
 {
     protected static ?string $model = Venta::class;
@@ -30,7 +30,7 @@ class VentaResource extends Resource
     {
         return $form
             ->schema([
-                
+
                 Forms\Components\Section::make()
                 ->schema([
                     Forms\Components\DatePicker::make('fecha')
@@ -84,7 +84,7 @@ class VentaResource extends Resource
                       //      ->disabled()
                             ->suffix('Gs.')
                             ->maxLength(191),
-                        
+
                 ])
                 ->live(onBlur: true)
 
@@ -156,10 +156,11 @@ class VentaResource extends Resource
                         self::updateTotals( $get, $set);
                         //self::updateLineTotal($get, $set);
                     }),
-                    
-                    
+
+
             ]);
     }
+
 
     public static function table(Table $table): Table
     {
@@ -196,6 +197,12 @@ class VentaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                CreateAction::make()
+                ->mutateFormDataUsing(function (array $data): array {
+                    $data['user_id'] = auth()->id();
+
+                    return $data;
+                })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -222,10 +229,10 @@ class VentaResource extends Resource
     }
     public static function updateLineTotal(Forms\Get $get, Forms\Set $set): void {
         $lineTotal = $get('ventadets.cantidad') * $get('ventadets.precio');
-        
+
         $set('subtotal', number_format($lineTotal, 2, '.', ''));
     }
-   
+
     public static function updateTotals(Forms\Get $get, Forms\Set $set): void {
         $lineItems = $get('ventadets');
 
@@ -241,7 +248,7 @@ class VentaResource extends Resource
             $subtotal1 += $linetotal;
 
         }
-        
+
         //$set('sub_total', number_format($subtotal, 2, '.', ''));
         //$set('total', number_format($subtotal - ($subtotal - ($get('discount'))) + ($subtotal * ($get('tax') / 100)), 2, '.', ''));
         $set('total', number_format($subtotal1 -($subtotal1 * $get('descuento')/100), 2, '.', ''));
@@ -251,7 +258,7 @@ class VentaResource extends Resource
         $lineItems = $get('movimientos');
         $subtotal1 = 0;
         foreach($lineItems as $item) {
-           
+
 
             $subtotal1 += $item['importe'];
 
