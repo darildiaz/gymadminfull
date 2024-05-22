@@ -19,6 +19,7 @@
                             Nuestro sistema de administración de gimnasio es una solución integral diseñada para facilitar la gestión diaria de un gimnasio o centro de fitness. Con un enfoque en la eficiencia operativa y la experiencia del cliente, nuestro sistema ofrece una amplia gama de funciones que abarcan desde la gestión de socios y clases hasta el seguimiento de pagos y la generación de informes.
 <br>
 <br>
+
 Una de las características clave de nuestro sistema es su capacidad para gestionar fácilmente la programación de clases, permitiendo a los administradores definir horarios, asignar entrenadores y gestionar la asistencia de los clientes. Además, el sistema facilita el seguimiento de los pagos de los clientes, generando recordatorios automáticos y permitiendo el acceso a los clientes a su historial de pagos.
 <br>
 <br>

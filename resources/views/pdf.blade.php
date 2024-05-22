@@ -58,14 +58,9 @@ function numeroALetras($num)
     return '';
 }
 
-// Ejemplo de uso
-$numero = 1234567;
-echo numeroALetras($numero); // "un millón doscientos treinta y cuatro mil quinientos sesenta y siete"
 
 ?>
-<div>fecha: {{ $record->fecha }}</div>
 <head>
-    <title>Factura</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,10 +83,9 @@ echo numeroALetras($numero); // "un millón doscientos treinta y cuatro mil quin
     </style>
 </head>
 <body>
-    <div>
-        <h1>Factura {{ $record->id }}</h1>
-        <p>Nombre: {{ $record->clientes->nombre_cliente  }} {{ $record->clientes->apellido_cliente }}</p>
-        <p>RUC: {{ $record->id }}</p>
+    <div class="visible-print text-center">
+        {!! QrCode::size(100)->generate('Request::url()'); !!}
+        <p>Escanéame para volver a la página principal.</p>
     </div>
     <table>
     <tr>
@@ -105,49 +99,87 @@ echo numeroALetras($numero); // "un millón doscientos treinta y cuatro mil quin
             <br>INICIO DE VIGENCIA 16/12/2019
             <br>RUC 5790779-0
             <br> <h1>FACTURA VIRTUAL</h1>
-            <br>001-001-0000 {{ $record->id }}
+            <br>001-001-0000{{ $record->id }}
         </th>
+    </tr>
+    <tr>
         <th>
             FECHA DE EMISION:10/05/2023
         </th>
         <th>
-            CONDICION DE VENTA:CONTADOXCREDITO
+            CONDICION DE VENTA:CONTADO X CREDITO
         </th>
+    </tr>
+    <tr>
+        <th>
+            RUC / CEDULA DE IDENTIDAD:{{ $record->clientes->id  }}
+            <br>NOMBRE O RAZON SOCIAL: {{ $record->clientes->nombre_cliente  }} {{ $record->clientes->apellido_cliente }}
+            <br>DIRECCION:
+
+        </th>
+        <th>
+            NUMERO DE NOTA DE REMISION
+        </th>
+    </tr>
+
     </table>
     <table>
         <thead>
-            
+
             <tr>
-                <th>producto</th>
-                <th>cantidad</th>
-                <th>Precio</th>
+                <th rowspan="2">Cantidad</th>
+                <th  rowspan="2">Descripcion</th>
+                <th  rowspan="2">Precio Unitario</th>
+                <th colspan="3"><center> Impuestos</center></th>
+            </tr>
+            <tr>
+                <th>Exentas</th>
+                <th>IVA 5%</th>
+                <th>IVA 10%</th>
+
             </tr>
         </thead>
         <tbody>
             @foreach($record->ventadets as $producto)
             <tr>
-                <td>{{ $producto['producto.nombre'] }}</td>
                 <td>{{ $producto['cantidad'] }}</td>
+                <td>{{ $producto->productos->nombre }}</td>
                 <td>{{ $producto['precio'] }}</td>
+                <td></td>
+                <td></td>
+                <td>{{ $producto['precio'] * $producto['cantidad']}}</td>
             </tr>
             @endforeach
         </tbody>
     </table>
+    <br>
+    <table>
+        <tbody>
+        <tr>
+            <td rowspan="4">
 
-    <div class="total-table">
-        <table>
-            <tr>
-                <th>Total</th>
-                <td>{{ $record->total }}</td>
-            </tr>
-            <tr>
-                <th>Total Escrito</th>
-                <td>{{ numeroALetras($record->total) }}</td>
-            </tr>
-            <tr>
-                <th>IVA</th>
-                <td>{{ $record->descuento}}</td>
-            </tr>
-        </table>
-    </div>
+                {!! QrCode::generate('Transfórmame en un QrCode!'); !!}
+            </td>
+            <td>Total Parcial</td>
+            <td>0</td>
+            <td>0</td>
+            <td>0</td>
+        </tr>
+        <tr>
+            <td colspan="3">Total a Pagar: {{ numeroALetras($record->total) }} Guaranies.</td>
+            <td>{{ $record->total }}</td>
+        </tr>
+        <tr>
+            <td>Liquidacion de IVA</td>
+            <td>(5%) <br> 0</td>
+            <td>(10%) <br> {{ $record->total /11}}</td>
+            <td>(total)<br>{{ $record->total /11}}</td>
+        </tr>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
+    </tbody>
+
+    </table>
+
 </body>

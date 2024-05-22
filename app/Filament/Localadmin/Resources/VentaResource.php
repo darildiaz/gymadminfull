@@ -37,6 +37,7 @@ class VentaResource extends Resource
                 ->schema([
                     Forms\Components\DatePicker::make('fecha')
                     //->readonly()
+                    ->default(now())
                     ->required(),
                     Forms\Components\Select::make('clientes_id')
                         ->required()
@@ -170,6 +171,7 @@ class VentaResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('fecha')
                     ->date()
+
                     ->sortable(),
                 Tables\Columns\TextColumn::make('clientes.nombre_cliente')
                     ->sortable(),
@@ -199,7 +201,7 @@ class VentaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-                tables\Actions\Action::make('pdf') 
+                tables\Actions\Action::make('pdf')
                     ->label('PDF')
                     ->color('success')
                    // ->icon('heroicon-s-download')
@@ -209,7 +211,7 @@ class VentaResource extends Resource
                                 Blade::render('pdf', ['record' => $record])
                             )->stream();
                         },'comprobante'. $record->id . '.pdf');
-                    }), 
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

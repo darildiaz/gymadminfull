@@ -197,7 +197,7 @@ return [
         App\Providers\Filament\LocaladminPanelProvider::class,
         App\Providers\Filament\ClientesadminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
-
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
     ],
 
     /*
@@ -213,6 +213,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-    ])->toArray(),
+        'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class
+        ])->toArray(),
 
 ];
