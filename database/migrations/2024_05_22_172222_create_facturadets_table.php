@@ -11,19 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('datosfacturas', function (Blueprint $table) {
+        Schema::create('facturadets', function (Blueprint $table) {
             $table->id();
-            $table->string('timbrado');
-            $table->date('codigocontrol');
-            $table->date('vigencia');
-            $table->date('vencimiento');
-            $table->date('ruc');
-            $table->string('sucursal');
-            $table->boolean('activo');
-            $table->foreignId('gym_id')
-            ->contrained('gyms')
+            $table->foreignId('facturas_id')
+            ->contrained('facturas')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+            $table->foreignId('impuestos_id')
+            ->contrained('impuestos')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+            $table->string('descripcion');
+            $table->decimal('cantidad', 10, 2)->nullable();
+            $table->integer('precio');
+
             $table->timestamps();
         });
     }
@@ -33,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('datosfacturas');
+        Schema::dropIfExists('facturadets');
     }
 };

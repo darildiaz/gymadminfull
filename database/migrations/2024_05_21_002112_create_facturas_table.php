@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
+            $table->string('sucursal');
+            $table->integer('nfactura');
             $table->integer('valorFactura');
             $table->integer('valorImpuesto');
             $table->foreignId('datosfacturas_id')

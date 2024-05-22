@@ -83,23 +83,25 @@ function numeroALetras($num)
     </style>
 </head>
 <body>
-    <div class="visible-print text-center">
-        {!! QrCode::size(100)->generate('Request::url()'); !!}
-        <p>Escanéame para volver a la página principal.</p>
-    </div>
+    
     <table>
     <tr>
-        <th><h1>Lopez Sa</h1>
-            <br>direccion
-            <br>servicions
+        <th>
+            <center>
+            <h1>{{ $record->gym->razonsocial }}</h1>
+            <br>{{ $record->gym->direccion }}
+            <br>{{ $record->gym->servicios }}
+            </center>
         </th>
         <th>
-            TIMBRADO Nº 13824055
-            <br>CODIGO CONTROL 8CED08B6
-            <br>INICIO DE VIGENCIA 16/12/2019
-            <br>RUC 5790779-0
-            <br> <h1>FACTURA VIRTUAL</h1>
-            <br>001-001-0000{{ $record->id }}
+            <center>
+                TIMBRADO Nº 13824055
+                <br>CODIGO CONTROL 8CED08B6
+                <br>INICIO DE VIGENCIA 16/12/2019
+                <br>RUC: {{ $record->gym->ruc }}
+                <br> FACTURA VIRTUAL
+                <br>001-001-0000{{ $record->id }}
+            </center>
         </th>
     </tr>
     <tr>
@@ -118,7 +120,8 @@ function numeroALetras($num)
 
         </th>
         <th>
-            NUMERO DE NOTA DE REMISION
+            NUMERO DE NOTA DE REMISION:
+            <br><br><br>
         </th>
     </tr>
 
@@ -150,6 +153,15 @@ function numeroALetras($num)
                 <td>{{ $producto['precio'] * $producto['cantidad']}}</td>
             </tr>
             @endforeach
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
+            <tr>
+                <td></td><td></td><td></td><td></td><td></td><td></td>
+            </tr>
         </tbody>
     </table>
     <br>

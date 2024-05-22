@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('gyms', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('ruc');
+            $table->string('razonsocial');
+            $table->string('direccion');
+            $table->string('servicios');
             $table->double('longitud');
             $table->double('latitud');
             $table->text('descripcion');

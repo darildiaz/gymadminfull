@@ -92,6 +92,19 @@ class GymResource extends Resource
                     ->relationship('categorias','nombre')
                     ->searchable()
                     ->preload(),
+                    Forms\Components\TextInput::make('ruc')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\TextInput::make('razonsocial')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\TextInput::make('direccion')
+                    ->required()
+                    ->maxLength(255),
+                    Forms\Components\TextInput::make('servicios')
+                    ->required()
+                    ->maxLength(255),
+
                 Forms\Components\Repeater::make('gym_user')
                     ->relationship()
                     ->schema([
