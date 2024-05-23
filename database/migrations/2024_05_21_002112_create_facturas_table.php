@@ -21,6 +21,10 @@ return new class extends Migration
             ->contrained('datosfacturas')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+            $table->foreignId('gym_id')
+            ->contrained('gyms')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
             $table->timestamps();
         });
     }

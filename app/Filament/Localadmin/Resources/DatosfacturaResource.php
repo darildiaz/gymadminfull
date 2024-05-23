@@ -18,7 +18,8 @@ class DatosfacturaResource extends Resource
     protected static ?string $model = Datosfactura::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationGroup = "facturacion";
+    protected static ?string $tenantRelationshipName= 'datosfacturas';
     public static function form(Form $form): Form
     {
         return $form
@@ -26,20 +27,17 @@ class DatosfacturaResource extends Resource
                 Forms\Components\TextInput::make('timbrado')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\DatePicker::make('codigocontrol')
+                Forms\Components\TextInput::make('codigocontrol')
+                    ->required(),
+                Forms\Components\DatePicker::make('vigencia')
                     ->required(),
                 Forms\Components\DatePicker::make('vencimiento')
-                    ->required(),
-                Forms\Components\DatePicker::make('ruc')
                     ->required(),
                 Forms\Components\TextInput::make('sucursal')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\Toggle::make('activo')
                     ->required(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
             ]);
     }
 
@@ -50,21 +48,16 @@ class DatosfacturaResource extends Resource
                 Tables\Columns\TextColumn::make('timbrado')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('codigocontrol')
-                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('vencimiento')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('ruc')
-                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sucursal')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('activo')
                     ->boolean(),
-                Tables\Columns\TextColumn::make('gym_id')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

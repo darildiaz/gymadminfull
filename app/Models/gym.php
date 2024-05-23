@@ -10,7 +10,7 @@ class gym extends Model
 {
     use HasFactory;
    // protected $fillable = ['name','longitud','latitud','descripcion','categorias_id','imagen','users_id','habilitado'];
-   
+
     /*public function members(){
         return $this->belongsToMany(User::class,'gym_user','gym_id','user_id');
     }*/
@@ -71,5 +71,11 @@ class gym extends Model
     }
     public function dietas(){
         return $this->hasMany(movimiento::class);
+    }
+    public function datosfacturas(){
+        return $this->hasMany(datosfactura::class);
+    }
+    public function facturas(){
+        return $this->hasMany(factura::class);
     }
 }

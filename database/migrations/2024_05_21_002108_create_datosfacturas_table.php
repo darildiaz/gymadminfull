@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('datosfacturas', function (Blueprint $table) {
             $table->id();
             $table->string('timbrado');
-            $table->date('codigocontrol');
+            $table->string('codigocontrol');
             $table->date('vigencia');
             $table->date('vencimiento');
-            $table->date('ruc');
+            $table->string('ruc');
             $table->string('sucursal');
             $table->boolean('activo');
             $table->foreignId('gym_id')
