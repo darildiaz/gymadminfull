@@ -13,18 +13,25 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Model;
 
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Blade;
 class FacturaResource extends Resource
 {
     protected static ?string $model = Factura::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = "facturacion";
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-
+                Forms\Components\DatePicker::make('fecha')
+                //->readonly()
+                ->default(now())
+                ->required(),
                 Forms\Components\Select::make('datosfacturas_id')
                     ->required()
                     ->relationship(
@@ -39,32 +46,22 @@ class FacturaResource extends Resource
                 Forms\Components\TextInput::make('nfactura')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('valorFactura')
+                Forms\Components\Select::make('clientes_id')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('valorImpuesto')
-                    ->required()
-                    ->numeric(),
+                    ->relationship(
+                        name: 'clientes',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                        ->afterStateUpdated(fn(callable $set ) => ('clientes_id'))
+                        ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
+                        ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
+                    ->preload()
+                    ->live(),
                     Forms\Components\Section::make()
                     ->schema([
                     Forms\Components\Repeater::make('facturadets')
                     ->relationship()
                     ->schema([
-                        Forms\Components\Select::make('productos_id')
-                            ->required()
-                            ->relationship(
-                                name: 'productos',
-                                titleAttribute: 'nombre',
-                                modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
-                            ->searchable()
-                            ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
-                               // $producto = producto::find($get('productos_id'));
-                                //$set('precio', $producto->precio);
-                                //self::updateLineTotal($get, $set);
-
-                            })
-                            ->live(onBlur: true)
-                            ->preload(),
                         Forms\Components\TextInput::make('cantidad')
                             ->required()
                             ->default(1)
@@ -74,6 +71,22 @@ class FacturaResource extends Resource
                             })
                             ->live(onBlur: true)
                             ->numeric(),
+                            Forms\Components\TextInput::make('descripcion')
+                            ->required()
+                            //->default(1)
+                            ->live(onBlur: true),
+                        
+                        Forms\Components\Select::make('impuestos_id')
+                            ->required()
+                            ->relationship(
+                                name: 'impuestos',
+                                titleAttribute: 'nombre',
+                                //modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
+                                )
+                            ->searchable()
+                            ->live(onBlur: true)
+                            ->preload(),
+                        
                         Forms\Components\TextInput::make('precio')
                             ->default(0)
                         ->live(onBlur: true)
@@ -91,8 +104,14 @@ class FacturaResource extends Resource
                     //self::updateTotals( $get, $set);
 				    //self::updateLineTotal($get, $set);
                 })
-                ->columns(3),
+                ->columns(4),
                 ])->columns(1),
+                Forms\Components\TextInput::make('valorFactura')
+                ->required()
+                ->numeric(),
+            Forms\Components\TextInput::make('valorImpuesto')
+                ->required()
+                ->numeric(),
             ]);
     }
 
@@ -100,6 +119,9 @@ class FacturaResource extends Resource
     {
         return $table
             ->columns([
+                Tables\Columns\TextColumn::make('datosfacturas.timbrado')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('sucursal')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nfactura')
@@ -109,9 +131,6 @@ class FacturaResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('valorImpuesto')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('datosfacturas_id')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -129,6 +148,17 @@ class FacturaResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('pdf')
+                ->label('PDF')
+                ->color('success')
+               // ->icon('heroicon-s-download')
+                ->action(function (Model $record) {
+                    return response()->streamDownload(function () use ($record) {
+                        echo Pdf::loadHtml(
+                            Blade::render('pdf', ['record' => $record])
+                        )->stream();
+                    },'comprobante'. $record->id . '.pdf');
+                }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

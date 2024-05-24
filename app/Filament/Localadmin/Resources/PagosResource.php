@@ -16,7 +16,10 @@ use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\tarifa;
-
+use App\Models\factura;
+use App\Models\facturadet;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Blade;
 class PagosResource extends Resource
 {
     protected static ?string $model = Pagos::class;
@@ -24,12 +27,16 @@ class PagosResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "pagos";
     protected static ?string $tenantRelationshipName= 'pagoss';
-
+    protected function getRedirectUrl(): string
+    {
+        return $this->getResource()::getUrl('index');
+    }
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('fecha_inicio')
+                    ->default(now())
                     ->required(),
                 Forms\Components\Select::make('actividads_id')
                     ->required()
@@ -51,7 +58,7 @@ class PagosResource extends Resource
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
                     ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
                     ->preload(),
-                Forms\Components\Select::make('tarifa_id')
+                Forms\Components\Select::make('tarifas_id')
                     ->required()
                     ->relationship(
                         name: 'tarifas',
@@ -62,7 +69,7 @@ class PagosResource extends Resource
                     ->searchable(['dias', 'precio'])
                     //->afterStateUpdated(fn ( Model $record, Forms\Set $set) =>  $set('importe', $record->precio) )
                     ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
-                        $tarifa = tarifa::find($get('tarifa_id'));
+                        $tarifa = tarifa::find($get('tarifas_id'));
                         $set('importe', $tarifa->precio);
                         $set('sesiones', $tarifa->dias);
                     })
@@ -95,12 +102,14 @@ class PagosResource extends Resource
                             )
                         ->searchable()
                         ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
-                            $set('gym_id',   Filament::getTenant());
+                            //$set('gym_id',   Filament::getTenant());
                             })
                         ->preload(),
                         Forms\Components\TextInput::make('importe')
                             ->required()
                             ->numeric(),
+                        Forms\Components\Hidden::make('gym_id')
+                            ->default(Filament::getTenant()->id),
                         /*Forms\Components\TextInput::make('gym_id')
                     ->dehydrated()
 
@@ -129,7 +138,9 @@ class PagosResource extends Resource
                 Tables\Columns\TextColumn::make('clientes.apellido_cliente')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('tarifa_id')
+                Tables\Columns\TextColumn::make('tarifas.descripcion')
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('tarifas.impuestos.descripcion')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('sesiones')
@@ -153,11 +164,38 @@ class PagosResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                //Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('Generar Factura')
+                    ->icon('heroicon-m-check-badge')
+                    ->action(function(Model $pagos, factura $factura, facturadet $facturadet){
+                        $factura = new Factura;
+                        $factura->fecha=now();
+                        $factura->sucursal=1;
+                        $factura->nfactura=1;
+                        $factura->valorFactura=$pagos->importe;
+                        $factura->valorImpuesto=1;
+                        
+                        $factura->datosfacturas_id=1;
+                        $factura->gym_id=Filament::getTenant()->id;
+                        $factura->clientes_id = $pagos->clientes_id;
+                        $factura->save();
+                        $facturadet = new Facturadet;
+                        $facturadet->facturas_id=$factura->id;
+                        $facturadet->cantidad=$pagos->tarifas->cantidad;
+                        $facturadet->descripcion=$pagos->tarifas->descripcion;
+                        $facturadet->impuestos_id=$pagos->tarifas->impuestos_id;
+                        $facturadet->precio=$pagos->importe;
+                        $facturadet->save();
+                    return response()->streamDownload(function () use ($factura) {
+                            echo Pdf::loadHtml(
+                                Blade::render('pdf', ['record' => $factura])
+                            )->stream();
+                        },'comprobante'. $factura->id . '.pdf');
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                //    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

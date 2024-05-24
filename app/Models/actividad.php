@@ -14,13 +14,13 @@ class actividad extends Model
     }
     public function actividadentrenador(): HasMany{
 
-        return $this->hasMany(actividadentrenador::class);
+        return $this->hasMany(actividadentrenador::class,'actividads_id');
     }
     public function entrenadors(){
         return $this->hasMany(entrenador::class);
     }
     public function suscripcions(){
-        return $this->hasMany(suscripcion::class);
+        return $this->hasMany(suscripcion::class,'actividads_id');
     }
     public function tarifas(){
         return $this->hasMany(tarifa::class);
@@ -30,5 +30,9 @@ class actividad extends Model
     }
     public function visitas(){
         return $this->hasMany(visita::class);
+    }
+    public function getSuscriptosCountAttribute()
+    {
+        return $this->suscripcions()->count();
     }
 }

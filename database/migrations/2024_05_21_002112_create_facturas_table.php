@@ -13,12 +13,18 @@ return new class extends Migration
     {
         Schema::create('facturas', function (Blueprint $table) {
             $table->id();
+            $table->date('fecha');
+
             $table->string('sucursal');
             $table->integer('nfactura');
             $table->integer('valorFactura');
             $table->integer('valorImpuesto');
             $table->foreignId('datosfacturas_id')
             ->contrained('datosfacturas')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+            $table->foreignId('clientes_id')
+            ->contrained('clientes')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
             $table->foreignId('gym_id')

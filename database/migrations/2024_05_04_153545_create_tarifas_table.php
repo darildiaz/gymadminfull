@@ -24,6 +24,12 @@ return new class extends Migration
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
             $table->timestamps();
+            $table->foreignId('impuestos_id')
+            ->contrained('impuestos')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
+            $table->string('descripcion');
+            $table->decimal('cantidad', 10, 2)->nullable();
         });
     }
 

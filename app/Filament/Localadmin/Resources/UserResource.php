@@ -45,7 +45,16 @@ class UserResource extends Resource
 
                     ->required()
                     ->maxLength(255),
-                Forms\Components\Select::make('roles')->multiple()->relationship('roles', 'name')
+                Forms\Components\Select::make('roles')
+                    ->multiple()
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function ($query, $get) {
+                            $query->where('name', '!=', 'super');
+                        }
+                    )
+                    ,
              ]);
     }
 
@@ -60,7 +69,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -78,6 +88,12 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
    //             Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('verificar')
+                    ->icon('heroicon-m-check-badge')
+                    ->action(function(User $user){
+                        $user->email_verified_at = Date ('Y-m-d H:i:s');
+                    }),
+  
    Tables\Actions\Action::make('changePassword')
            ->action(function (User $record, array $data): void {
                $record->update([

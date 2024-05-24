@@ -16,8 +16,12 @@ class factura extends Model
     {
         return $this->belongsTo(datosfactura::class);
     }
+    public function clientes(){
+        return $this->belongsTo(cliente::class);
+    }
     public function facturadets(): HasMany{
 
         return $this->hasMany(facturadet::class,'facturas_id');
     }
+    
 }

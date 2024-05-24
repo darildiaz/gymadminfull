@@ -19,7 +19,6 @@ class dieta extends Model
         return $this->belongsTo(entrenador::class);
     }
     public function dietadets(): HasMany{
-
         return $this->hasMany(dietadet::class,'dietas_id');
     }
 }

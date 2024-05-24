@@ -64,7 +64,7 @@ class ActividadResource extends Resource
                     ->label('Entrenadores')
                     ->relationship()
                     ->schema([
-                        Forms\Components\Select::make('entrenador_id')
+                        Forms\Components\Select::make('entrenadors_id')
                     ->label('Entrenador')
 
                             ->required()
@@ -88,6 +88,8 @@ class ActividadResource extends Resource
                 
                 Tables\Columns\TextColumn::make('Descripcion')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('suscriptos_count')->label('Cantidad de Suscriptos'),
+                
                 Tables\Columns\TextColumn::make('cupo')
                     ->numeric()
                     ->sortable(),
@@ -147,7 +149,7 @@ class ActividadResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\SuscripcionRelationManager::class
         ];
     }
 

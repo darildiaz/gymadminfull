@@ -28,6 +28,7 @@ class ClientesadminPanelProvider extends PanelProvider
             ->path('clientesadmin')
             ->login()
             ->tenant(gym::class)
+            ->profile()
  
             ->colors([
                 'primary' => Color::Amber,
@@ -40,7 +41,7 @@ class ClientesadminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Clientesadmin/Widgets'), for: 'App\\Filament\\Clientesadmin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+              //  Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

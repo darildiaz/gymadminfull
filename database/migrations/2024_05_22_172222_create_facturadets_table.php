@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('facturadets', function (Blueprint $table) {
+        Schema::create('facturadet', function (Blueprint $table) {
             $table->id();
             $table->foreignId('facturas_id')
             ->contrained('facturas')
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('facturadets');
+        Schema::dropIfExists('facturadet');
     }
 };

@@ -45,8 +45,8 @@ class VisitaResource extends Resource
                         name: 'suscripcions',
                         titleAttribute: 'clientes.nombre_cliente',
                         modifyQueryUsing: fn (Builder $query,Forms\Get $get) =>
-                            $query->where('suscripcions.actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id') )
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
+                            $query->where('suscripcions.actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id')->where('habilitado',true) )
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente} ({$record->habilitado})")
                     ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
                     ->preload(),
                 
@@ -59,15 +59,21 @@ class VisitaResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('fecha')
                     ->date()
+                    ->searchable()
                     ->sortable(),
+                    
                 Tables\Columns\TextColumn::make('actividads.Descripcion')
                     ->numeric()
+                    ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('clientes.nombre_cliente')
+                ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('clientes.apellido_cliente')
+                ->searchable()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

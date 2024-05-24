@@ -14,4 +14,7 @@ class ejercicio extends Model
     public function tipoejercicios(){
         return $this->belongsTo(tipoejercicio::class);
     }
+    public function rutinadets(): HasMany{
+        return $this->hasMany(rutinadet::class);
+    }
 }

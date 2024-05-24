@@ -142,7 +142,7 @@ class VentaResource extends Resource
                             ->required()
                             ->numeric(),
                         Forms\Components\Hidden::make('gym_id')
-                        ->default(Filament::getTenant()->id),
+                            ->default(Filament::getTenant()->id),
                         /*Forms\Components\TextInput::make('')
                             ->required()
                             ->default(1)

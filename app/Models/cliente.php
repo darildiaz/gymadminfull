@@ -11,11 +11,12 @@ class cliente extends Model
     public function gym(){
         return $this->belongsTo(gym::class);
     }
+    
+    public function users(){
+        return $this->belongsTo(user::class,'users_id');
+    }
     public function suscripcions(){
         return $this->hasMany(suscripcion::class);
-    }
-    public function users(){
-        return $this->belongsTo(user::class);
     }
     public function pagoss(){
         return $this->hasMany(pagos::class);
@@ -26,5 +27,9 @@ class cliente extends Model
     public function ventas(): HasMany{
 
         return $this->hasMany(venta::class);
+    }
+    public function facturas(): HasMany{
+
+        return $this->hasMany(factura::class);
     }
 }

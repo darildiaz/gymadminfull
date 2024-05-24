@@ -14,12 +14,16 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Filters\Filter;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Auth;
 class ClienteResource extends Resource
 {
     protected static ?string $model = Cliente::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->where('users_id', Auth::user()->id);
+    }
     public static function form(Form $form): Form
     {
         return $form

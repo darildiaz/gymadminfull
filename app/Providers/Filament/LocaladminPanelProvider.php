@@ -30,6 +30,8 @@ class LocaladminPanelProvider extends PanelProvider
             ->id('localadmin')
             ->path('localadmin')
             ->login()
+            ->profile()
+
             ->tenant(gym::class)
             ->tenantMiddleware([
                 SyncSpatiePermissionsWithFilamentTenants::class,
@@ -46,7 +48,7 @@ class LocaladminPanelProvider extends PanelProvider
             ->discoverWidgets(in: app_path('Filament/Localadmin/Widgets'), for: 'App\\Filament\\Localadmin\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
-                Widgets\FilamentInfoWidget::class,
+                //Widgets\FilamentInfoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

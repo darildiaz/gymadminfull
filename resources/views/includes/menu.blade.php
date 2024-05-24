@@ -9,7 +9,8 @@
                 <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/locales">Locales</a></li>
                 <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/servicios">Servicios</a></li>
                 <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/nosotros">Nosotros</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/admin/login">Login</a></li>
+                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/clientesadmin/login">Login/cliente</a></li>
+                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/localadmin/login">Login/local</a></li>
 
             </ul>
         </nav>

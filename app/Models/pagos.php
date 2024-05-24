@@ -20,7 +20,7 @@ class pagos extends Model
         return $this->belongsTo(cliente::class);
     }
     public function tarifas(){
-        return $this->hasMany(tarifa::class);
+        return $this->belongsTo(tarifa::class,'tarifas_id');
     }
     
     public function suscripcions(){

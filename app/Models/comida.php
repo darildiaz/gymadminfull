@@ -11,5 +11,7 @@ class comida extends Model
     public function gym(){
         return $this->belongsTo(gym::class);
     }
-    
+    public function dietadets(){
+        return $this->hasMany(dietadet::class);
+    }
 }

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class MovimientoResource extends Resource
 {
     protected static ?string $model = Movimiento::class;
-    protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $navigationGroup = "pagos";
     protected static ?string $tenantRelationshipName= 'movimientos';
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

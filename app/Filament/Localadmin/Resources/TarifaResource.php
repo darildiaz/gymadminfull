@@ -41,6 +41,33 @@ class TarifaResource extends Resource
                     ->required()
                     ->suffix('Gs.')
                     ->numeric(),
+                Forms\Components\Section::make('datos facturacion')
+                    ->schema([
+                        Forms\Components\TextInput::make('cantidad')
+                        ->required()
+                        ->default(1)
+                        ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
+                        //  self::updateLineTotal($get, $set);
+                        //   $set('subtotal', $get('cantidad')*$get('precio'));
+                        })
+                        ->live(onBlur: true)
+                        ->numeric(),
+                        Forms\Components\TextInput::make('descripcion')
+                        ->required()
+                        //->default(1)
+                        ->live(onBlur: true),
+                    
+                    Forms\Components\Select::make('impuestos_id')
+                        ->required()
+                        ->relationship(
+                            name: 'impuestos',
+                            titleAttribute: 'nombre',
+                            //modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())
+                            )
+                        ->searchable()
+                        ->live(onBlur: true)
+                        ->preload(),
+                        ])
             ]);
     }
 

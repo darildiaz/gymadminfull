@@ -12,13 +12,19 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class DietaResource extends Resource
 {
     protected static ?string $model = Dieta::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+        ->join('clientes', 'clientes.id', '=', 'dietas.clientes_id')
+        ->where('clientes.users_id', Auth::user()->id);
+    }
     public static function form(Form $form): Form
     {
         return $form

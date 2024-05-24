@@ -31,7 +31,12 @@ class SuscripcionResource extends Resource
             ->schema([
                 Forms\Components\Select::make('actividads_id')
                     ->required()
-                    ->relationship('actividads','descripcion')
+                    ->relationship(
+                        name: 'actividads',
+                        titleAttribute: 'Sescripcion',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('cupo','>','suscriptos_count'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->Descripcion} ( {$record->suscriptos_count}/{$record->cupo})")
+                    
                     ->searchable()
                     ->preload(),
                 Forms\Components\Select::make('clientes_id')

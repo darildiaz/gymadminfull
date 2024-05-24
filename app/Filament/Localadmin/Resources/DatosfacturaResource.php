@@ -52,8 +52,6 @@ class DatosfacturaResource extends Resource
                 Tables\Columns\TextColumn::make('vencimiento')
                     ->date()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('ruc')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('sucursal')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('activo')

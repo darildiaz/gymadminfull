@@ -11,14 +11,15 @@ class entrenador extends Model
     public function gym(){
         return $this->belongsTo(gym::class);
     }
-    public function actividadentrenador(){
-        return $this->belongsTo(actividadentrenador::class);
-    }
     public function users(){
         return $this->belongsTo(user::class);
     }
-    public function rutinas(){
-        return $this->hasMany(rutina::class);
+    public function actividadentrenador(){
+        return $this->hasMany(actividadentrenador::class,'entrenadors_id');
+    }
+    
+    public function rutinadets(){
+        return $this->hasMany(rutinadet::class);
     }
 
 }

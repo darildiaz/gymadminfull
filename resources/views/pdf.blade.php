@@ -58,6 +58,15 @@ function numeroALetras($num)
     return '';
 }
 
+function completarCincoDigitos($numero) {
+    // Asegúrate de que el número se maneje como una cadena
+    $numeroStr = strval($numero);
+    
+    // Utiliza str_pad para agregar ceros a la izquierda
+    $numeroCompleto = str_pad($numeroStr, 5, '0', STR_PAD_LEFT);
+    
+    return $numeroCompleto;
+}
 
 ?>
 <head>
@@ -100,7 +109,7 @@ function numeroALetras($num)
                 <br>INICIO DE VIGENCIA 16/12/2019
                 <br>RUC: {{ $record->gym->ruc }}
                 <br> FACTURA VIRTUAL
-                <br>001-001-0000{{ $record->id }}
+                <br>001-001-{{ completarCincoDigitos($record->id) }}
             </center>
         </th>
     </tr>
@@ -143,16 +152,28 @@ function numeroALetras($num)
             </tr>
         </thead>
         <tbody>
-            @foreach($record->ventadets as $producto)
+            @foreach($record->facturadets as $producto)
             <tr>
                 <td>{{ $producto['cantidad'] }}</td>
-                <td>{{ $producto->productos->nombre }}</td>
+                <td>{{ $producto['descripcion'] }}</td>
                 <td>{{ $producto['precio'] }}</td>
-                <td></td>
-                <td></td>
-                <td>{{ $producto['precio'] * $producto['cantidad']}}</td>
+                <td>
+                    @if($producto['impuestos_id'] == 1)
+                        {{ $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
+                <td>
+                    @if($producto['impuestos_id'] == 2)
+                        {{ $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
+                <td>
+                    @if($producto['impuestos_id'] == 3)
+                        {{ $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
             </tr>
-            @endforeach
+        @endforeach
             <tr>
                 <td></td><td></td><td></td><td></td><td></td><td></td>
             </tr>
@@ -169,7 +190,7 @@ function numeroALetras($num)
         <tbody>
         <tr>
             <td rowspan="4">
-
+                <img src="data:image/png;base64,{!! base64_encode(QrCode::generate('CED08B6|13824055|001-001-0000001|5790779|'.$record->valorFactura)) !!}" />
                 {!! QrCode::generate('Transfórmame en un QrCode!'); !!}
             </td>
             <td>Total Parcial</td>
@@ -178,14 +199,14 @@ function numeroALetras($num)
             <td>0</td>
         </tr>
         <tr>
-            <td colspan="3">Total a Pagar: {{ numeroALetras($record->total) }} Guaranies.</td>
-            <td>{{ $record->total }}</td>
+            <td colspan="3">Total a Pagar: {{ numeroALetras($record->valorFactura) }} Guaranies.</td>
+            <td>{{ $record->valorFactura }}</td>
         </tr>
         <tr>
             <td>Liquidacion de IVA</td>
             <td>(5%) <br> 0</td>
-            <td>(10%) <br> {{ $record->total /11}}</td>
-            <td>(total)<br>{{ $record->total /11}}</td>
+            <td>(10%) <br> </td>
+            <td>(total)<br>{{ $record->valorImpuesto}}</td>
         </tr>
         <tr>
             <td colspan="4"></td>
