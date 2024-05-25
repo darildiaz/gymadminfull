@@ -168,6 +168,7 @@ class PagosResource extends Resource
                 Tables\Actions\Action::make('Generar Factura')
                     ->icon('heroicon-m-check-badge')
                     ->action(function(Model $pagos, factura $factura, facturadet $facturadet){
+                        
                         $factura = new Factura;
                         $factura->fecha=now();
                         $factura->sucursal=1;

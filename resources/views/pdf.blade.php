@@ -1,5 +1,8 @@
 <?php
 
+$sum1=0;
+$sum2=0;
+$sum3=0;
 function numeroALetras($num)
 {
     $numero= number_format($num, 2, '.', '');
@@ -104,18 +107,18 @@ function completarCincoDigitos($numero) {
         </th>
         <th>
             <center>
-                TIMBRADO Nº 13824055
-                <br>CODIGO CONTROL 8CED08B6
-                <br>INICIO DE VIGENCIA 16/12/2019
+                TIMBRADO Nº {{ $record->datosfacturas->timbrado }} 
+                <br>CODIGO CONTROL {{ $record->datosfacturas->codigocontrol }} 
+                <br>INICIO DE VIGENCIA {{ $record->datosfacturas->vigencia }} 
                 <br>RUC: {{ $record->gym->ruc }}
                 <br> FACTURA VIRTUAL
-                <br>001-001-{{ completarCincoDigitos($record->id) }}
+                <br>{{ $record->datosfacturas->sucursal }} -{{ completarCincoDigitos($record->id) }}
             </center>
         </th>
     </tr>
     <tr>
         <th>
-            FECHA DE EMISION:10/05/2023
+            FECHA DE EMISION:{{ $record->fecha}} 
         </th>
         <th>
             CONDICION DE VENTA:CONTADO X CREDITO
@@ -125,7 +128,7 @@ function completarCincoDigitos($numero) {
         <th>
             RUC / CEDULA DE IDENTIDAD:{{ $record->clientes->id  }}
             <br>NOMBRE O RAZON SOCIAL: {{ $record->clientes->nombre_cliente  }} {{ $record->clientes->apellido_cliente }}
-            <br>DIRECCION:
+            <br>DIRECCION:  {{ $record->clientes->direccion  }}
 
         </th>
         <th>
@@ -194,9 +197,25 @@ function completarCincoDigitos($numero) {
                 {!! QrCode::generate('Transfórmame en un QrCode!'); !!}
             </td>
             <td>Total Parcial</td>
-            <td>0</td>
-            <td>0</td>
-            <td>0</td>
+            
+            @foreach($record->facturadets as $producto)
+            
+                <td>
+                    @if($producto['impuestos_id'] == 1)
+                        {{$sum1+= $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
+                <td>
+                    @if($producto['impuestos_id'] == 2)
+                        {{$sum2+= $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
+                <td>
+                    @if($producto['impuestos_id'] == 3)
+                        {{$sum3+= $producto['precio'] * $producto['cantidad'] }}
+                    @endif
+                </td>
+        @endforeach
         </tr>
         <tr>
             <td colspan="3">Total a Pagar: {{ numeroALetras($record->valorFactura) }} Guaranies.</td>
@@ -204,9 +223,9 @@ function completarCincoDigitos($numero) {
         </tr>
         <tr>
             <td>Liquidacion de IVA</td>
-            <td>(5%) <br> 0</td>
-            <td>(10%) <br> </td>
-            <td>(total)<br>{{ $record->valorImpuesto}}</td>
+            <td>(5%) <br> {{$sum2/21 }}</td>
+            <td>(10%) <br> {{$sum3/11 }}</td>
+            <td>(total)<br>{{ $sum3/11+$sum2/11}}</td>
         </tr>
         <tr>
             <td colspan="4"></td>
