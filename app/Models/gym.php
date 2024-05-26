@@ -9,11 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class gym extends Model
 {
     use HasFactory;
-   // protected $fillable = ['name','longitud','latitud','descripcion','categorias_id','imagen','users_id','habilitado'];
-
-    /*public function members(){
-        return $this->belongsToMany(User::class,'gym_user','gym_id','user_id');
-    }*/
+ 
 
     public function categorias()
     {
