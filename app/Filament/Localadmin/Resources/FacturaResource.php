@@ -34,18 +34,25 @@ class FacturaResource extends Resource
                 ->required(),
                 Forms\Components\Select::make('datosfacturas_id')
                     ->required()
+                    ->default(1)
                     ->relationship(
                         name: 'datosfacturas',
                         titleAttribute: 'timbrado',
                         modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('activo',true))
                     ->searchable()
                     ->preload(),
-                Forms\Components\TextInput::make('sucursal')
+                    Forms\Components\TextInput::make('sucursal1')
+                    ->disabled()
+
+                    //->default()
+                    ->maxLength(255),
+                /*Forms\Components\TextInput::make('sucursal')
                     ->required()
+                    //->default()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('nfactura')
                     ->required()
-                    ->numeric(),
+                    ->numeric(),*/
                 Forms\Components\Select::make('clientes_id')
                     ->required()
                     ->relationship(
@@ -55,7 +62,8 @@ class FacturaResource extends Resource
                         ->afterStateUpdated(fn(callable $set ) => ('clientes_id'))
                         ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
                         ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
-                    ->preload()
+                    //->default(1)
+                        ->preload()
                     ->live(),
                     Forms\Components\Section::make()
                     ->schema([
@@ -75,7 +83,7 @@ class FacturaResource extends Resource
                             ->required()
                             //->default(1)
                             ->live(onBlur: true),
-                        
+
                         Forms\Components\Select::make('impuestos_id')
                             ->required()
                             ->relationship(
@@ -86,7 +94,7 @@ class FacturaResource extends Resource
                             ->searchable()
                             ->live(onBlur: true)
                             ->preload(),
-                        
+
                         Forms\Components\TextInput::make('precio')
                             ->default(0)
                         ->live(onBlur: true)
@@ -101,13 +109,15 @@ class FacturaResource extends Resource
                 ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
                   //  $set('subtotal', $get('cantidad')*$get('precio'));
                     //$set('total', 1000);
-                    //self::updateTotals( $get, $set);
-				    //self::updateLineTotal($get, $set);
+                    self::updateTotals( $get, $set);
+				    self::updateLineTotal($get, $set);
+				    self::updateImpuesto($get, $set);
                 })
                 ->columns(4),
                 ])->columns(1),
                 Forms\Components\TextInput::make('valorFactura')
                 ->required()
+                ->disabled()
                 ->numeric(),
             Forms\Components\TextInput::make('valorImpuesto')
                 ->required()
@@ -147,7 +157,7 @@ class FacturaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+           //     Tables\Actions\EditAction::make(),
                 Tables\Actions\Action::make('pdf')
                 ->label('PDF')
                 ->color('success')
@@ -180,7 +190,34 @@ class FacturaResource extends Resource
             'index' => Pages\ListFacturas::route('/'),
             'create' => Pages\CreateFactura::route('/create'),
             'view' => Pages\ViewFactura::route('/{record}'),
-            'edit' => Pages\EditFactura::route('/{record}/edit'),
+         //   'edit' => Pages\EditFactura::route('/{record}/edit'),
         ];
+    }
+    public static function updateLineTotal(Forms\Get $get, Forms\Set $set): void {
+        $lineTotal = $get('ventadets.cantidad') * $get('ventadets.precio');
+
+        $set('subtotal', number_format($lineTotal, 2, '.', ''));
+    }
+
+    public static function updateTotals(Forms\Get $get, Forms\Set $set): void {
+        $lineItems = $get('ventadets');
+
+        $subtotal1 = 0;
+        foreach($lineItems as $item) {
+            $linetotal = ($item['cantidad'] * $item['precio']);
+        /*    if($item['discount_type'] === 'fixed') {
+                $linetotal -= $item['discount'];
+            } else {
+                $linetotal -= ($item['discount'] / 100 * $linetotal);
+            }*/
+
+            $subtotal1 += $linetotal;
+
+        }
+
+        //$set('sub_total', number_format($subtotal, 2, '.', ''));
+        //$set('total', number_format($subtotal - ($subtotal - ($get('discount'))) + ($subtotal * ($get('tax') / 100)), 2, '.', ''));
+        $set('total', number_format($subtotal1 -($subtotal1 * $get('descuento')/100), 2, '.', ''));
+
     }
 }

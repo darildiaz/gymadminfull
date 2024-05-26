@@ -33,6 +33,7 @@ class PagosResource extends Resource
     }
     public static function form(Form $form): Form
     {
+
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('fecha_inicio')
@@ -168,14 +169,14 @@ class PagosResource extends Resource
                 Tables\Actions\Action::make('Generar Factura')
                     ->icon('heroicon-m-check-badge')
                     ->action(function(Model $pagos, factura $factura, facturadet $facturadet){
-                        
+
                         $factura = new Factura;
                         $factura->fecha=now();
                         $factura->sucursal=1;
                         $factura->nfactura=1;
                         $factura->valorFactura=$pagos->importe;
                         $factura->valorImpuesto=1;
-                        
+
                         $factura->datosfacturas_id=1;
                         $factura->gym_id=Filament::getTenant()->id;
                         $factura->clientes_id = $pagos->clientes_id;
