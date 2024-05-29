@@ -13,10 +13,10 @@ class dieta extends Model
         return $this->belongsTo(gym::class);
     }
     public function clientes(){
-        return $this->belongsTo(cliente::class);
+        return $this->belongsTo(cliente::class,'clientes_id');
     }
     public function entrenadors(){
-        return $this->belongsTo(entrenador::class);
+        return $this->belongsTo(entrenador::class,'entrenadors_id');
     }
     public function dietadets(): HasMany{
         return $this->hasMany(dietadet::class,'dietas_id');

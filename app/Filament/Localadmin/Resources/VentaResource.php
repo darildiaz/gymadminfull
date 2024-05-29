@@ -61,7 +61,7 @@ class VentaResource extends Resource
                             ->relationship(
                                 name: 'productos',
                                 titleAttribute: 'nombre',
-                                modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                                modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('is_visible',true))
                             ->searchable()
                             ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
                                 $producto = producto::find($get('productos_id'));
@@ -248,18 +248,12 @@ class VentaResource extends Resource
         $subtotal1 = 0;
         foreach($lineItems as $item) {
             $linetotal = ($item['cantidad'] * $item['precio']);
-        /*    if($item['discount_type'] === 'fixed') {
-                $linetotal -= $item['discount'];
-            } else {
-                $linetotal -= ($item['discount'] / 100 * $linetotal);
-            }*/
+       
 
             $subtotal1 += $linetotal;
 
         }
 
-        //$set('sub_total', number_format($subtotal, 2, '.', ''));
-        //$set('total', number_format($subtotal - ($subtotal - ($get('discount'))) + ($subtotal * ($get('tax') / 100)), 2, '.', ''));
         $set('total', number_format($subtotal1 -($subtotal1 * $get('descuento')/100), 2, '.', ''));
 
     }

@@ -55,7 +55,7 @@ class PagosResource extends Resource
                         name: 'suscripcions',
                         titleAttribute: 'clientes.nombre_cliente',
                         modifyQueryUsing: fn (Builder $query,Forms\Get $get) =>
-                            $query->where('actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id') )
+                            $query->where('actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id')-> where('habilitado', false ))
                     ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
                     ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
                     ->preload(),
@@ -119,7 +119,16 @@ class PagosResource extends Resource
                             //->hide(),
 */
                             ])->columns(3)
+                            ->afterStateUpdated(function ( Forms\Set $set,Forms\get $get)  {
+                                //$set('gym_id',   Filament::getTenant());
+                                    self::updatepagos( $get, $set);
+
+                                })
                     ])->columns(1),
+                    Forms\Components\TextInput::make('total_pago')
+                    ->disabled()
+                    ->gte('importe')
+                    ->numeric(),
             ]);
     }
 
@@ -217,5 +226,17 @@ class PagosResource extends Resource
             'view' => Pages\ViewPagos::route('/{record}'),
             'edit' => Pages\EditPagos::route('/{record}/edit'),
         ];
+    }
+    public static function updatepagos(Forms\Get $get, Forms\Set $set): void {
+        $lineItems = $get('movimientos');
+        $subtotal1 = 0;
+        foreach($lineItems as $item) {
+
+
+            $subtotal1 += $item['importe'];
+
+        }
+        $set('total_pago', number_format($subtotal1, 2, '.', ''));
+
     }
 }

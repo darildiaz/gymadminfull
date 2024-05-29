@@ -26,6 +26,7 @@ class EntrenadorResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('users_id')
+                    ->unique()
                     ->required()
                     ->relationship(
                         name: 'users',

@@ -5,6 +5,7 @@ namespace App\Filament\Clientesadmin\Resources;
 use App\Filament\Clientesadmin\Resources\RutinaResource\Pages;
 use App\Filament\Clientesadmin\Resources\RutinaResource\RelationManagers;
 use App\Models\Rutina;
+use App\Models\cliente;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,9 +22,17 @@ class RutinaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
+        /*return parent::getEloquentQuery()
         ->join('clientes', 'clientes.id', '=', 'Rutinas.clientes_id')
-        ->where('clientes.users_id', Auth::user()->id);
+        ->where('clientes.users_id', Auth::user()->id);*/
+        $cliente = Cliente::where('users_id', Auth::user()->id)->first();
+
+    // Verificar si se encontró un cliente
+        if ($cliente) {
+         // Filtrar la consulta por el ID del cliente
+            return parent::getEloquentQuery()
+                ->where('clientes_id', $cliente->id);
+        }
     }
     public static function form(Form $form): Form
     {
@@ -91,7 +100,7 @@ class RutinaResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\RutinadetRelationManager::class,
         ];
     }
 

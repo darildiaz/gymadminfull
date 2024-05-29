@@ -5,6 +5,7 @@ namespace App\Filament\Clientesadmin\Resources;
 use App\Filament\Clientesadmin\Resources\DietaResource\Pages;
 use App\Filament\Clientesadmin\Resources\DietaResource\RelationManagers;
 use App\Models\Dieta;
+use App\Models\Cliente;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -21,9 +22,17 @@ class DietaResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()
-        ->join('clientes', 'clientes.id', '=', 'dietas.clientes_id')
-        ->where('clientes.users_id', Auth::user()->id);
+        /*return parent::getEloquentQuery()
+        ->join('clientes', 'clientes.id', '=', 'Rutinas.clientes_id')
+        ->where('clientes.users_id', Auth::user()->id);*/
+        $cliente = Cliente::where('users_id', Auth::user()->id)->first();
+
+    // Verificar si se encontró un cliente
+        if ($cliente) {
+         // Filtrar la consulta por el ID del cliente
+            return parent::getEloquentQuery()
+                ->where('clientes_id', $cliente->id);
+        }
     }
     public static function form(Form $form): Form
     {
@@ -34,15 +43,13 @@ class DietaResource extends Resource
                 Forms\Components\TextInput::make('dias')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('clientes_id')
+                Forms\Components\TextInput::make('clientes.nombre_cliente')
                     ->required()
                     ->numeric(),
                 Forms\Components\TextInput::make('entrenadors_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
+                
             ]);
     }
 
@@ -56,13 +63,13 @@ class DietaResource extends Resource
                 Tables\Columns\TextColumn::make('dias')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes_id')
+                /*Tables\Columns\TextColumn::make('clientes_id')
+                    ->numeric()
+                    ->sortable(),*/
+                Tables\Columns\TextColumn::make('entrenadors.nombre_entrenador')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('entrenadors_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('gym_id')
+                Tables\Columns\TextColumn::make('entrenadors.apellido_entrenador')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')

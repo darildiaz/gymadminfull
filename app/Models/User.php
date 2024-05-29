@@ -100,5 +100,14 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     public function gym_users(){
         return $this->hasMany(gym_user::class,'user_id');
     }
+    public function getcliente()
+    {
+        $user = auth()->user();
 
+        if ($user && $user->cliente) {
+            return $user->cliente->id;
+        }
+
+        return null; // o puedes lanzar una excepción si prefieres
+    }
 }

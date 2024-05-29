@@ -193,8 +193,7 @@ function completarCincoDigitos($numero) {
         <tbody>
         <tr>
             <td rowspan="4">
-                <img src="data:image/png;base64,{!! base64_encode(QrCode::generate('CED08B6|13824055|001-001-0000001|5790779|'.$record->valorFactura)) !!}" />
-                {!! QrCode::generate('Transfórmame en un QrCode!'); !!}
+                <img src="data:image/png;base64,{!! base64_encode(QrCode::generate($record->datosfacturas->codigocontrol.'|'.$record->datosfacturas->timbrado.'|'.$record->datosfacturas->sucursal.'-'.completarCincoDigitos($record->id).'|'.$record->clientes->id.'|'.$record->valorFactura)) !!}" />
             </td>
             <td>Total Parcial</td>
             
@@ -223,9 +222,9 @@ function completarCincoDigitos($numero) {
         </tr>
         <tr>
             <td>Liquidacion de IVA</td>
-            <td>(5%) <br> {{$sum2/21 }}</td>
-            <td>(10%) <br> {{$sum3/11 }}</td>
-            <td>(total)<br>{{ $sum3/11+$sum2/11}}</td>
+            <td>(5%) <br> {{ ceil($sum2/21) }}</td>
+            <td>(10%) <br> {{ ceil($sum3/11) }}</td>
+            <td>(total)<br>{{ ceil($sum3/11)+ceil($sum2/21)}}</td>
         </tr>
         <tr>
             <td colspan="4"></td>

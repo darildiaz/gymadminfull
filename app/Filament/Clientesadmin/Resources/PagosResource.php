@@ -58,19 +58,14 @@ class PagosResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('fecha_inicio')
                     ->date()
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('actividads_id')
+                Tables\Columns\TextColumn::make('actividads.Descripcion')
                     ->numeric()
+                    ->searchable()
+
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('gym_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('tarifa_id')
-                    ->numeric()
-                    ->sortable(),
+                
                 Tables\Columns\TextColumn::make('sesiones')
                     ->numeric()
                     ->sortable(),
@@ -90,12 +85,12 @@ class PagosResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+              //  Tables\Actions\ViewAction::make(),
+            //    Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+             //       Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -111,9 +106,9 @@ class PagosResource extends Resource
     {
         return [
             'index' => Pages\ListPagos::route('/'),
-            'create' => Pages\CreatePagos::route('/create'),
-            'view' => Pages\ViewPagos::route('/{record}'),
-            'edit' => Pages\EditPagos::route('/{record}/edit'),
+            //'create' => Pages\CreatePagos::route('/create'),
+          //  'view' => Pages\ViewPagos::route('/{record}'),
+          //  'edit' => Pages\EditPagos::route('/{record}/edit'),
         ];
     }
 }

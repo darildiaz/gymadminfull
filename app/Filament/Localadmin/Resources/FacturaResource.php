@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Blade;
+use App\Models\impuesto;
 class FacturaResource extends Resource
 {
     protected static ?string $model = Factura::class;
@@ -41,18 +42,15 @@ class FacturaResource extends Resource
                         modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant())->where('activo',true))
                     ->searchable()
                     ->preload(),
-                    Forms\Components\TextInput::make('sucursal1')
+                   /* Forms\Components\TextInput::make('sucursal1')
                     ->disabled()
 
                     //->default()
-                    ->maxLength(255),
-                /*Forms\Components\TextInput::make('sucursal')
-                    ->required()
-                    //->default()
-                    ->maxLength(255),
+                    ->maxLength(255),*/
+                
                 Forms\Components\TextInput::make('nfactura')
                     ->required()
-                    ->numeric(),*/
+                    ->numeric(),
                 Forms\Components\Select::make('clientes_id')
                     ->required()
                     ->relationship(
@@ -110,17 +108,19 @@ class FacturaResource extends Resource
                   //  $set('subtotal', $get('cantidad')*$get('precio'));
                     //$set('total', 1000);
                     self::updateTotals( $get, $set);
-				    self::updateLineTotal($get, $set);
+				//    self::updateLineTotal($get, $set);
 				    self::updateImpuesto($get, $set);
                 })
                 ->columns(4),
                 ])->columns(1),
                 Forms\Components\TextInput::make('valorFactura')
                 ->required()
-                ->disabled()
+                //->disabled()
                 ->numeric(),
             Forms\Components\TextInput::make('valorImpuesto')
                 ->required()
+              //  ->disabled()
+
                 ->numeric(),
             ]);
     }
@@ -200,7 +200,7 @@ class FacturaResource extends Resource
     }
 
     public static function updateTotals(Forms\Get $get, Forms\Set $set): void {
-        $lineItems = $get('ventadets');
+        $lineItems = $get('facturadets');
 
         $subtotal1 = 0;
         foreach($lineItems as $item) {
@@ -217,7 +217,26 @@ class FacturaResource extends Resource
 
         //$set('sub_total', number_format($subtotal, 2, '.', ''));
         //$set('total', number_format($subtotal - ($subtotal - ($get('discount'))) + ($subtotal * ($get('tax') / 100)), 2, '.', ''));
-        $set('total', number_format($subtotal1 -($subtotal1 * $get('descuento')/100), 2, '.', ''));
+        $set('valorFactura', number_format($subtotal1 , 2, '.', ''));
+
+    }
+    public static function updateImpuesto(Forms\Get $get, Forms\Set $set): void {
+        $lineItems = $get('facturadets');
+
+        $impuesto = 0;
+        foreach($lineItems as $item) {
+            $linetotal = ($item['cantidad']*$item['precio']);
+           if (!empty($item['impuestos_id'])) {
+            $valor = impuesto::find($item['impuestos_id'])->valor;
+            $impuesto += $linetotal*$valor/(100+$valor);
+            }
+    }
+    
+    $impuestoRedondeado = ceil($impuesto);
+
+    // Asignar el valor calculado de impuestos formateado
+    $set('valorImpuesto', number_format($impuestoRedondeado, 2, '.', ''));
+       // $set('valorImpuesto', number_format(($impuesto ), 2, '.', ''));
 
     }
 }

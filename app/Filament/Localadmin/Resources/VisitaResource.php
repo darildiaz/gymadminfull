@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Facades\Filament;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Validation\Rule;
+use Closure;
 class VisitaResource extends Resource
 {
     protected static ?string $model = Visita::class;
@@ -28,6 +29,7 @@ class VisitaResource extends Resource
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('fecha')
+                ->default(now())
                     ->required(),
                 Forms\Components\Select::make('actividads_id')
                 ->required()
@@ -45,9 +47,14 @@ class VisitaResource extends Resource
                         name: 'suscripcions',
                         titleAttribute: 'clientes.nombre_cliente',
                         modifyQueryUsing: fn (Builder $query,Forms\Get $get) =>
-                            $query->where('suscripcions.actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id')->where('habilitado',true) )
-                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente} ({$record->habilitado})")
+                            $query->where('suscripcions.actividads_id', $get('actividads_id') )->join('clientes', 'clientes.id', '=', 'suscripcions.clientes_id')/*->where('habilitado',true)*/ )
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente} (" . 
+                    ($record->habilitado ? 'activo' : 'no activo') . 
+                    ")")
                     ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
+                        ->rules([
+                            Rule::exists('suscripcions', 'clientes_id')->where('habilitado', true),
+                    ])
                     ->preload(),
                 
             ]);
