@@ -27,6 +27,8 @@ class ClienteResource extends Resource
             ->schema([
                 Forms\Components\Select::make('users_id')
                 ->unique()
+                ->hiddenOn('edit')
+
                     ->required()
                     ->relationship(
                         name: 'users',
@@ -86,6 +88,13 @@ class ClienteResource extends Resource
                 ->required()
                 ->suffix('M')
                 ->numeric(),
+            
+                Forms\Components\TextInput::make('ruc')
+                        ->required()
+                        ->maxLength(15),
+                Forms\Components\TextInput::make('razonsocial')
+                                ->required()
+                                ->maxLength(15),
             ]);
     }
 

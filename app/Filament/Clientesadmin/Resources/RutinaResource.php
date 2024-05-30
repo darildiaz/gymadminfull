@@ -14,6 +14,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Filament\Facades\Filament;
 
 class RutinaResource extends Resource
 {
@@ -40,18 +41,25 @@ class RutinaResource extends Resource
             ->schema([
                 Forms\Components\DatePicker::make('fecha_emision')
                     ->required(),
-                Forms\Components\TextInput::make('actividads_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('entrenadors_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('clientes_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
+
+                Forms\Components\Select::make('actividads_id')
+                ->required()
+                ->relationship(
+                    name: 'actividads',
+                    titleAttribute: 'Descripcion',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                ->searchable()
+                ->preload(),
+                Forms\Components\Select::make('entrenadors_id')
+                ->required()
+                ->relationship(
+                    name: 'entrenadors',
+                    titleAttribute: 'nombre_entrenador',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                ->searchable()
+                ->preload(),
+                
+               
             ]);
     }
 
@@ -61,21 +69,27 @@ class RutinaResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('fecha_emision')
                     ->date()
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('actividads_id')
+                Tables\Columns\TextColumn::make('actividads.Descripcion')
                     ->numeric()
+                    ->searchable()
+
                     ->sortable(),
-                Tables\Columns\TextColumn::make('entrenadors_id')
+                Tables\Columns\TextColumn::make('entrenadors.nombre_entrenador')
                     ->numeric()
+                    ->searchable()
+
                     ->sortable(),
-                Tables\Columns\TextColumn::make('clientes_id')
+                Tables\Columns\TextColumn::make('entrenadors.apellido_entrenador')
                     ->numeric()
+                    ->searchable()
+
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym_id')
-                    ->numeric()
-                    ->sortable(),
+                
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
+
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
@@ -88,11 +102,11 @@ class RutinaResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+              //  Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                //    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

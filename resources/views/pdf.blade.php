@@ -126,8 +126,8 @@ function completarCincoDigitos($numero) {
     </tr>
     <tr>
         <th>
-            RUC / CEDULA DE IDENTIDAD:{{ $record->clientes->id  }}
-            <br>NOMBRE O RAZON SOCIAL: {{ $record->clientes->nombre_cliente  }} {{ $record->clientes->apellido_cliente }}
+            RUC / CEDULA DE IDENTIDAD:{{ $record->clientes->ruc  }}
+            <br>NOMBRE O RAZON SOCIAL: {{ $record->clientes->razonsocial  }} 
             <br>DIRECCION:  {{ $record->clientes->direccion  }}
 
         </th>

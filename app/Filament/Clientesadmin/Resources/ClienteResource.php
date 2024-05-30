@@ -28,35 +28,56 @@ class ClienteResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('users_id')
+                Forms\Components\Select::make('users_id')
+                ->unique()
+                ->hiddenOn('edit')
+
+                ->required()
+                ->relationship(
+                    name: 'users',
+                    titleAttribute: 'name',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                ->searchable()
+                ->preload(),
+                    Forms\Components\TextInput::make('nombre_cliente')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('nombre_cliente')
-                    ->required()
-                    ->maxLength(255),
+                    ->maxLength(191),
                 Forms\Components\TextInput::make('apellido_cliente')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(191),
                 Forms\Components\TextInput::make('telefono')
-                    ->tel()
+                ->tel()
+                ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->required()
-                    ->maxLength(255),
+                    ->maxLength(15),
                 Forms\Components\TextInput::make('telefono_emergencia')
-                    ->tel()
+                ->tel()
+                ->telRegex('/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\.\/0-9]*$/')
                     ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('Sexo')
+                    ->maxLength(15),
+                    Forms\Components\Select::make('Sexo')
                     ->required()
-                    ->maxLength(255),
+                    ->options([
+                        'femenino' => 'Femenino',
+                        'masculino' => 'Masculino',
+                        'otro' => 'Otro',
+                        ]),
                 Forms\Components\TextInput::make('peso')
                     ->required()
+                    ->suffix(' Kg')
+    
+    
                     ->numeric(),
                 Forms\Components\TextInput::make('altura')
                     ->required()
+                    ->suffix('M')
                     ->numeric(),
-                Forms\Components\TextInput::make('gym_id')
-                    ->required()
-                    ->numeric(),
+                Forms\Components\TextInput::make('ruc')
+                        ->required()
+                        ->maxLength(15),
+                Forms\Components\TextInput::make('razonsocial')
+                                ->required()
+                                ->maxLength(15),
             ]);
     }
 
@@ -64,8 +85,7 @@ class ClienteResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('users_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('users.name')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_cliente')
                     ->searchable(),

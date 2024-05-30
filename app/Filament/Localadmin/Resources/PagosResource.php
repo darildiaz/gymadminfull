@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\tarifa;
 use App\Models\factura;
+use App\Models\datosfactura;
 use App\Models\facturadet;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Blade;
@@ -160,6 +161,10 @@ class PagosResource extends Resource
                     ->numeric()
                     ->suffix(' Gs.')
                     ->sortable(),
+                Tables\Columns\TextColumn::make('facturas_id')
+                    ->sortable(),
+                    Tables\Columns\TextColumn::make('valido')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -178,35 +183,46 @@ class PagosResource extends Resource
                 Tables\Actions\Action::make('Generar Factura')
                     ->icon('heroicon-m-check-badge')
                     ->action(function(Model $pagos, factura $factura, facturadet $facturadet){
+                        if(empty($pagos->facturas_id)){
+                            $factura = new Factura;
+                            $factura->fecha=now();
+                            $factura->sucursal=1;
+                            $factura->nfactura=1;
+                            $factura->valorFactura=$pagos->importe;
+                            $factura->valorImpuesto=1;
 
-                        $factura = new Factura;
-                        $factura->fecha=now();
-                        $factura->sucursal=1;
-                        $factura->nfactura=1;
-                        $factura->valorFactura=$pagos->importe;
-                        $factura->valorImpuesto=1;
-
-                        $factura->datosfacturas_id=1;
-                        $factura->gym_id=Filament::getTenant()->id;
-                        $factura->clientes_id = $pagos->clientes_id;
-                        $factura->save();
-                        $facturadet = new Facturadet;
-                        $facturadet->facturas_id=$factura->id;
-                        $facturadet->cantidad=$pagos->tarifas->cantidad;
-                        $facturadet->descripcion=$pagos->tarifas->descripcion;
-                        $facturadet->impuestos_id=$pagos->tarifas->impuestos_id;
-                        $facturadet->precio=$pagos->importe;
-                        $facturadet->save();
-                    return response()->streamDownload(function () use ($factura) {
-                            echo Pdf::loadHtml(
-                                Blade::render('pdf', ['record' => $factura])
-                            )->stream();
-                        },'comprobante'. $factura->id . '.pdf');
+                            $factura->datosfacturas_id=DatosFactura::where('activo', 1)->where('gym_id', Filament::getTenant()->id)->first()->id;
+                            $factura->gym_id=Filament::getTenant()->id;
+                            $factura->clientes_id = $pagos->clientes_id;
+                            $factura->save();
+                            $facturadet = new Facturadet;
+                            $facturadet->facturas_id=$factura->id;
+                            $facturadet->cantidad=$pagos->tarifas->cantidad;
+                            $facturadet->descripcion=$pagos->tarifas->descripcion;
+                            $facturadet->impuestos_id=$pagos->tarifas->impuestos_id;
+                            $facturadet->precio=$pagos->importe;
+                            $facturadet->save();
+                            $pagos->facturas_id=$factura->id;
+                            $pagos->save();
+                            
+                            return response()->streamDownload(function () use ($factura) {
+                                echo Pdf::loadHtml(
+                                    Blade::render('pdf', ['record' => $factura])
+                                )->stream();
+                            },'comprobante'. $factura->id . '.pdf');
+                        }else{
+                            $factura = Factura::find($pagos->facturas_id);
+                            return response()->streamDownload(function () use ($factura) {
+                                echo Pdf::loadHtml(
+                                    Blade::render('pdf', ['record' => $factura])
+                                )->stream();
+                            },'comprobante'. $factura->id . '.pdf');
+                        }   
                     }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                //    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

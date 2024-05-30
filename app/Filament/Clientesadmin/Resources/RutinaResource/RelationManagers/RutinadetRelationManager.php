@@ -31,7 +31,7 @@ class RutinadetRelationManager extends RelationManager
             ->recordTitleAttribute('ejercicios')
             ->columns([
                 Tables\Columns\TextColumn::make('ejercicios.nombre_ejercicio'),
-               // Tables\Columns\TextColumn::make('ejercicios.descripcion_ejercicio'),
+                Tables\Columns\TextColumn::make('ejercicios.descripcion_ejercicio')->html(),
                 Tables\Columns\TextColumn::make('repeticion'),
                 Tables\Columns\TextColumn::make('descanso'),
             ])
