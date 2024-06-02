@@ -17,7 +17,7 @@ class DatosfacturaResource extends Resource
 {
     protected static ?string $model = Datosfactura::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-document';
     protected static ?string $navigationGroup = "facturacion";
     protected static ?string $tenantRelationshipName= 'datosfacturas';
     public static function form(Form $form): Form

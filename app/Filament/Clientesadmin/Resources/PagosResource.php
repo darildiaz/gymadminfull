@@ -18,7 +18,7 @@ class PagosResource extends Resource
 {
     protected static ?string $model = Pagos::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()

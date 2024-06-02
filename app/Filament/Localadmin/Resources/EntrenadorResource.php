@@ -18,20 +18,64 @@ class EntrenadorResource extends Resource
 {
     protected static ?string $model = Entrenador::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
     protected static ?string $navigationGroup = "Gyms";
+    protected static ?string $navigationLabel = "Entrenadores";
+    
     protected static ?string $tenantRelationshipName= 'entrenadors';
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 Forms\Components\Select::make('users_id')
-                    ->unique()
+                ->unique()
+                ->hiddenOn('edit')
                     ->required()
                     ->relationship(
                         name: 'users',
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                ->unique()
+                ->hiddenOn('edit')
+
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->unique()
+                ->hiddenOn('edit')
+
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+
+                ->hiddenOn('edit')
+
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->multiple()
+                    
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function ($query, $get) {
+                            $query->where('name', '!=', 'super');
+                        }
+                    )
+                    ->pivotData([
+                        'is_primary' => true,
+                    ]),
+                   
+                    Forms\Components\Hidden::make('gym_id')
+                    ->default(Filament::getTenant()->id),
+                    
+                        ])
                     ->searchable()
                     ->preload(),
                 Forms\Components\TextInput::make('nombre_entrenador')

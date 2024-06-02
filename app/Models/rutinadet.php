@@ -17,6 +17,11 @@ class rutinadet extends Pivot
     }*/
     public function rutina(): BelongsTo
     {
-        return $this->belongsTo(rutina::class);
+        return $this->belongsTo(rutina::class,'rutina_id');
+    }
+    
+ 
+    public function gym(){
+        return $this->belongsTo(gym::class);
     }
 }

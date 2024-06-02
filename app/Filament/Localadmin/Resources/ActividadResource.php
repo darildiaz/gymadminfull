@@ -21,8 +21,8 @@ class ActividadResource extends Resource
 {
     protected static ?string $model = Actividad::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-//    protected static ?string $navigationLabel = "Actividades";
+    protected static ?string $navigationIcon = 'heroicon-o-calendar';
+    protected static ?string $navigationLabel = "Actividades";
     protected static ?string $navigationGroup = "Gyms";
     protected static ?string $tenantRelationshipName= 'actividads';
 
@@ -88,11 +88,14 @@ class ActividadResource extends Resource
                 
                 Tables\Columns\TextColumn::make('Descripcion')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('suscriptos_count')->label('Cantidad de Suscriptos'),
-                
-                Tables\Columns\TextColumn::make('cupo')
+                    Tables\Columns\TextColumn::make('cupo')
                     ->numeric()
                     ->sortable(),
+                    Tables\Columns\TextColumn::make('suscriptos_count')
+                ->label('Cantidad de Suscriptos'),
+                Tables\Columns\TagsColumn::make('actividadentrenador.entrenadors.nombre_entrenador')
+                ->separator(','),
+               
                 Tables\Columns\TextColumn::make('horario'),
                 Tables\Columns\IconColumn::make('lunes')
                     ->boolean(),

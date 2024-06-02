@@ -17,7 +17,7 @@ class ComidaResource extends Resource
 {
     protected static ?string $model = Comida::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-face-smile';
     protected static ?string $navigationGroup = "Dietas";
     protected static ?string $tenantRelationshipName= 'comidas';
     public static function form(Form $form): Form

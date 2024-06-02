@@ -20,3 +20,4 @@ Route::get('/locales/', [HomeController::class,'locales']);
 Route::get('/servicios/', [HomeController::class,'servicios']);
 Route::get('/nosotros/', [HomeController::class,'nosotros']);
 Route::get('/local/{id}', [HomeController::class,'localdet']);
+Route::get('/demo/', [HomeController::class,'demo']);

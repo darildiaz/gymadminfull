@@ -20,7 +20,7 @@ class rutina extends Model
         return $this->belongsTo(actividad::class);
     }
     public function clientes(){
-        return $this->belongsTo(cliente::class);
+        return $this->belongsTo(cliente::class, 'clientes_id');
     }
     public function entrenadors(){
         return $this->belongsTo(entrenador::class);

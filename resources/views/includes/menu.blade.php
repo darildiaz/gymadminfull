@@ -1,21 +1,17 @@
 
-<nav class="w-full py-4 bg-blue-800 shadow">
-    <div class="w-full container mx-auto flex flex-wrap items-center justify-between">
 
-        <nav>
-            <ul class="flex items-center justify-between font-bold text-sm text-white uppercase no-underline">
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/">inicio</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/mapas">Mapa de Locales</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/locales">Locales</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/servicios">Servicios</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/nosotros">Nosotros</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/clientesadmin/login">Login/cliente</a></li>
-                <li><a class="hover:text-gray-200 hover:underline px-4" href="{{env('APP_URL')}}/localadmin/login">Login/local</a></li>
-
+        
+        <nav class="hidden md:flex md:flex-grow justify-center">
+            <ul class="flex justify-center space-x-4 text-white">
+              <li><a href="{{env('APP_URL')}}/" class="hover:text-secondary font-bold">Inicio</a></li>
+              <li><a href="{{env('APP_URL')}}/mapas" class="hover:text-secondary font-bold">Mapa</a></li>
+              <li><a href="{{env('APP_URL')}}/locales" class="hover:text-secondary font-bold">Locales</a></li>
+              <li><a href="{{env('APP_URL')}}/nosotros" class="hover:text-secondary font-bold">Nosotros</a></li>
+              <li><a href="{{env('APP_URL')}}/clientesadmin/login" class="hover:text-secondary font-bold">Login/cliente</a></li>
+              <li><a href="{{env('APP_URL')}}/localadmin/login" class="hover:text-secondary font-bold">Login/local</a></li>
             </ul>
-        </nav>
-
-        <div class="flex items-center text-lg no-underline text-white pr-6">
+          </nav>
+        <!--div class="flex items-center text-lg no-underline text-white pr-6">
             <a class="" href="#">
                 <i class="fab fa-facebook"></i>
             </a>
@@ -28,20 +24,5 @@
             <a class="pl-6" href="#">
                 <i class="fab fa-linkedin"></i>
             </a>
-        </div>
-    </div>
-
-</nav>
-
-    <!-- Text Header >
-    <header class="w-full container mx-auto">
-        <div class="flex flex-col items-center py-12">
-            <a class="font-bold text-gray-800 uppercase hover:text-gray-700 text-5xl" href="#">
-                Gym App
-            </a>
-            <p class="text-lg text-gray-600">
-                Encuentre el un Gym cerca de Usted
-            </p>
-        </div>
-    </header-->
-
+        </div-->
+   

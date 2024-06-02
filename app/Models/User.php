@@ -74,7 +74,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         }
         if ($panel->getId() === 'localadmin'){
             if (auth()->user()->clientes()->exists()) {
-            //    return false;
+              //  return false;
             }
     
             return true;

@@ -18,7 +18,7 @@ class FormapagoResource extends Resource
     protected static ?string $model = Formapago::class;
     protected static ?string $navigationGroup = "Mantenimiento";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
 
     public static function form(Form $form): Form
     {

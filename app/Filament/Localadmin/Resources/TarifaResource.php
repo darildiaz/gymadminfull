@@ -18,7 +18,7 @@ class TarifaResource extends Resource
 {
     protected static ?string $model = Tarifa::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-bangladeshi';
     protected static ?string $navigationGroup = "pagos";
     protected static ?string $tenantRelationshipName= 'tarifas';
 

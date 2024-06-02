@@ -9,6 +9,7 @@ use App\Models\user;
 use App\Models\cliente;
 use App\Models\ejercicio;
 use App\Models\entrenador;
+use App\Models\maquina;
 use App\Models\producto;
 use App\Models\suscripcion;
 use App\Models\visita;
@@ -25,8 +26,10 @@ class localadmincount extends BaseWidget
             card::make('Entrenadores',entrenador::query()->whereBelongsTo(Filament::getTenant())->count()),
             card::make('Ejercicios',ejercicio::query()->whereBelongsTo(Filament::getTenant())->count()),
             card::make('Productos',producto::query()->whereBelongsTo(Filament::getTenant())->count()),
+            card::make('Maquinas',maquina::query()->whereBelongsTo(Filament::getTenant())->sum('cantidad disponible')),
             card::make('suscripciones',suscripcion::query()->whereBelongsTo(Filament::getTenant())->count()),
             card::make('Visitas de Hoy',visita::query()->whereBelongsTo(Filament::getTenant())->whereDate('fecha', $hoy)->count()),
+            
             
         ];
     }

@@ -17,6 +17,10 @@ return new class extends Migration
             ->contrained('tipoejercicios')
             ->cascadeOnUpdate()
             ->cascadeOnDelete();
+            $table->foreignId('maquinas_id')
+            ->contrained('maquinas')
+            ->cascadeOnUpdate()
+            ->cascadeOnDelete();
             $table->string('nombre_ejercicio');
             $table->text('descripcion_ejercicio');
             $table->foreignId('gym_id')

@@ -13,12 +13,14 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\Hash;
 
 class ClienteResource extends Resource
 {
     protected static ?string $model = Cliente::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+  //  protected static ?string $navigationLabel = "Clientes";
     protected static ?string $navigationGroup = "Clientes";
     protected static ?string $tenantRelationshipName= 'clientes';
     public static function form(Form $form): Form
@@ -28,33 +30,54 @@ class ClienteResource extends Resource
                 Forms\Components\Select::make('users_id')
                 ->unique()
                 ->hiddenOn('edit')
-
                     ->required()
                     ->relationship(
                         name: 'users',
                         titleAttribute: 'name',
                         modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                        ->createOptionForm([
+                            Forms\Components\TextInput::make('name')
+                ->unique()
+                ->hiddenOn('edit')
+
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->unique()
+                ->hiddenOn('edit')
+
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\TextInput::make('password')
+                    ->password()
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
+
+                ->hiddenOn('edit')
+
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Select::make('roles')
+                    ->multiple()
+                    
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                        modifyQueryUsing: function ($query, $get) {
+                            $query->where('name', '!=', 'super');
+                        }
+                    )
+                    ->pivotData([
+                        'is_primary' => true,
+                    ]),
+                   
+                    Forms\Components\Hidden::make('gym_id')
+                    ->default(Filament::getTenant()->id),
+                    
+                        ])
                     ->searchable()
                     ->preload(),
-                /*Forms\Components\Select::make('users_id')
-                ->required()
-                ->relationship('users','name')
-                   ->searchable()
-                ->createOptionForm([
-                    Forms\Components\TextInput::make('name')
-                    ->required(),
-                    Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required(),
-                    Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->hiddenOn('edit')
-                    ->required(),
-                    //Forms\Components\select::make('roles')->multiple()->relationship('roles','name')
-                ])
-
-                ->preload(),
-*/
                 Forms\Components\TextInput::make('nombre_cliente')
                 ->required()
                 ->maxLength(191),

@@ -20,7 +20,7 @@ class RutinaResource extends Resource
 {
     protected static ?string $model = Rutina::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
     public static function getEloquentQuery(): Builder
     {
         /*return parent::getEloquentQuery()

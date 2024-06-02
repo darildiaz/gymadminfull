@@ -19,7 +19,7 @@ class ProductoResource extends Resource
     protected static ?string $model = Producto::class;
     protected static ?string $navigationGroup = "Ventas";
     protected static ?string $tenantRelationshipName= 'productos';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-cube';
 
     public static function form(Form $form): Form
     {

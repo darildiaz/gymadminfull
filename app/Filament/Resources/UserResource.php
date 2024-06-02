@@ -12,16 +12,12 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-
-//use App\Models\Role;
-//use Filament\Tables\Actions\Action;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
-    protected static ?string $navigationGroup = "Gyms";
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -31,33 +27,27 @@ class UserResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required()
+                    ->unique()
+                    ->hiddenOn('edit')
                     ->maxLength(255),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->unique()
+                    ->hiddenOn('edit')
                     ->required()
                     ->maxLength(255),
-               // Forms\Components\DateTimePicker::make('email_verified_at'),
+                Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
                     ->password()
-                ->hiddenOn('edit')
-
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->required()
                     ->maxLength(255),
-                    /*Forms\Components\TextInput::make('password1')
-                    ->password()
-                ->hiddenOn('edit')
-
-                    ->required()
-                    ->maxLength(255),*/
-
                 Forms\Components\Select::make('gym_id')
-               // ->required()
-                ->relationship('gyms','name')
-                ->searchable()
-                ->preload(),
+                    ->relationship('gyms','name')
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\Toggle::make('isadmin'),
                 Forms\Components\Select::make('roles')->multiple()->relationship('roles', 'name')
-                
 
             ]);
     }
@@ -73,28 +63,27 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('gym.name')
+                Tables\Columns\TextColumn::make('gym_id')
                     ->numeric()
                     ->sortable(),
-                    Tables\Columns\IconColumn::make('isadmin')
-                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\IconColumn::make('isadmin')
+                    ->boolean(),
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-           //     Tables\Actions\EditAction::make(),
-           Tables\Actions\Action::make('changePassword')
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\Action::make('changePassword')
            ->action(function (User $record, array $data): void {
                $record->update([
                    'password' => Hash::make($data['new_password']),
@@ -133,7 +122,6 @@ class UserResource extends Resource
     public static function getRelations(): array
     {
         return [
-
             //
         ];
     }

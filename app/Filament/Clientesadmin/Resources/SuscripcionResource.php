@@ -22,7 +22,7 @@ class SuscripcionResource extends Resource
     protected static ?string $model = Suscripcion::class;
     protected static ?string $tenantRelationshipName= 'suscripcions';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
     public static function getEloquentQuery(): Builder
     {
         /*return parent::getEloquentQuery()

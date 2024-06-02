@@ -21,7 +21,7 @@ class SuscripcionResource extends Resource
 {
     protected static ?string $model = Suscripcion::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-ticket';
     protected static ?string $navigationGroup = "Clientes";
     protected static ?string $tenantRelationshipName= 'suscripcions';
 

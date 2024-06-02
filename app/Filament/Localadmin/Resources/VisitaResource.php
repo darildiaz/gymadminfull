@@ -22,7 +22,7 @@ class VisitaResource extends Resource
     protected static ?string $navigationGroup = "Gyms";
     protected static ?string $tenantRelationshipName= 'visitas';
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-eye';
 
     public static function form(Form $form): Form
     {

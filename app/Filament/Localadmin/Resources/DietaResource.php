@@ -21,7 +21,7 @@ class DietaResource extends Resource
 {
     protected static ?string $model = Dieta::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-list';
     protected static ?string $navigationGroup = "Dietas";
     protected static ?string $tenantRelationshipName= 'dietas';
     public static function form(Form $form): Form

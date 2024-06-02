@@ -12,12 +12,13 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Facades\Filament;
 
 class EjercicioResource extends Resource
 {
     protected static ?string $model = Ejercicio::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-fire';
     protected static ?string $navigationGroup = "Rutinas";
     protected static ?string $tenantRelationshipName= 'ejercicios';
 
@@ -30,6 +31,14 @@ class EjercicioResource extends Resource
                 Forms\Components\Select::make('tipoejercicios_id')
                     ->required()
                     ->relationship('tipoejercicios','nombre')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\Select::make('maquinas_id')
+                    ->required()
+                    ->relationship(
+                        name: 'maquinas',
+                        titleAttribute: 'nombre',
+                        modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
                     ->searchable()
                     ->preload(),
                 Forms\Components\RichEditor::make('descripcion_ejercicio')

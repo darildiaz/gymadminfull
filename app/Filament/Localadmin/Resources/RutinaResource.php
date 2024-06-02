@@ -18,14 +18,14 @@ class RutinaResource extends Resource
 {
     protected static ?string $model = Rutina::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-clipboard-document-check';
     protected static ?string $navigationGroup = "Rutinas";
     protected static ?string $tenantRelationshipName= 'Rutinas';
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\DatePicker::make('fecha_emision')
+                Forms\Components\DatePicker::make('fecha_emision','fecha')
                     ->required(),
 
                 Forms\Components\Select::make('actividads_id')
@@ -61,7 +61,8 @@ class RutinaResource extends Resource
                     modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
                 ->searchable()
                 ->preload(),
-                
+                Forms\Components\Hidden::make('gym_id')
+                            ->default(Filament::getTenant()->id),
                 Forms\Components\TextInput::make('repeticion')
                 ->required()
                 ->maxLength(191),

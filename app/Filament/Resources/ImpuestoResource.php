@@ -16,8 +16,9 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class ImpuestoResource extends Resource
 {
     protected static ?string $model = Impuesto::class;
+    protected static ?string $navigationGroup = "Mantenimiento";
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
 
     public static function form(Form $form): Form
     {

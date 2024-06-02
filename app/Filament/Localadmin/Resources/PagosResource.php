@@ -25,7 +25,7 @@ class PagosResource extends Resource
 {
     protected static ?string $model = Pagos::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-banknotes';
     protected static ?string $navigationGroup = "pagos";
     protected static ?string $tenantRelationshipName= 'pagoss';
     protected function getRedirectUrl(): string

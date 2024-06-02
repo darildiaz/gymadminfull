@@ -22,7 +22,7 @@ class FacturaResource extends Resource
 {
     protected static ?string $model = Factura::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-archive-box';
     protected static ?string $navigationGroup = "facturacion";
 
     public static function form(Form $form): Form

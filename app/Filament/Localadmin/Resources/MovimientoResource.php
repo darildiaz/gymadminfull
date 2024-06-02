@@ -18,7 +18,7 @@ class MovimientoResource extends Resource
     protected static ?string $model = Movimiento::class;
     protected static ?string $navigationGroup = "pagos";
     protected static ?string $tenantRelationshipName= 'movimientos';
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-library';
 
     public static function form(Form $form): Form
     {

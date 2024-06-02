@@ -19,7 +19,7 @@ class ClienteResource extends Resource
 {
     protected static ?string $model = Cliente::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user';
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('users_id', Auth::user()->id);
