@@ -14,7 +14,10 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
-
+use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use App\Models\entrenador;
 class DietaResource extends Resource
 {
     protected static ?string $model = Dieta::class;
@@ -39,16 +42,60 @@ class DietaResource extends Resource
         return $form
             ->schema([
                 Forms\Components\DatePicker::make('fecha')
-                    ->required(),
-                Forms\Components\TextInput::make('dias')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('clientes.nombre_cliente')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('entrenadors_id')
-                    ->required()
-                    ->numeric(),
+                ->required(),
+            Forms\Components\TextInput::make('dias')
+                ->required()
+                ->numeric(),
+            Forms\Components\Select::make('clientes_id')
+                ->required()
+                ->relationship(
+                    name: 'clientes',
+                    titleAttribute: 'nombre',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                    ->afterStateUpdated(fn(callable $set ) => ('clientes_id'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_cliente} apellido: {$record->apellido_cliente}")
+                    ->searchable('clientes.nombre_cliente','clientes.apellido_cliente')
+                ->preload()
+                ->live(),
+            Forms\Components\Select::make('entrenadors_id')
+                ->required()
+                ->relationship(
+                    name: 'entrenadors',
+                    titleAttribute: 'nombre',
+                    modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                    ->afterStateUpdated(fn(callable $set ) => ('entrenadors_id'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "nombre:{$record->nombre_entrenador} apellido: {$record->apellido_entrenador}")
+                    ->searchable('entrenadors.nombre_entrenador','entrenadors.apellido_entrenador')
+                ->preload()
+                ->live(),
+            
+
+                Forms\Components\Repeater::make('dietadets')
+                ->relationship()
+                ->schema([
+                    Forms\Components\TimePicker::make('horario')
+                        ->required(),
+                    Forms\Components\Select::make('comidas_id')
+                        ->required() 
+                        ->relationship(
+                            name: 'comidas',
+                            titleAttribute: 'nombre',
+                            modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
+                            //->afterStateUpdated(fn(callable $set ) => ('cs_id'))
+                        ->searchable()
+                        ->preload()
+                        ->live(),
+                
+                    Forms\Components\TextInput::make('cantidad')
+                        ->default(1)
+                    ->live(onBlur: true)
+
+                  //      ->disabled()
+                        ->suffix('Gs.')
+                        ->maxLength(191),
+                    
+            ])
+            ->live(onBlur: true)
                 
             ]);
     }
