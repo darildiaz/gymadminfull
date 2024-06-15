@@ -70,32 +70,7 @@ class DietaResource extends Resource
                 ->live(),
             
 
-                Forms\Components\Repeater::make('dietadets')
-                ->relationship()
-                ->schema([
-                    Forms\Components\TimePicker::make('horario')
-                        ->required(),
-                    Forms\Components\Select::make('comidas_id')
-                        ->required() 
-                        ->relationship(
-                            name: 'comidas',
-                            titleAttribute: 'nombre',
-                            modifyQueryUsing: fn (Builder $query) => $query->whereBelongsTo(Filament::getTenant()))
-                            //->afterStateUpdated(fn(callable $set ) => ('cs_id'))
-                        ->searchable()
-                        ->preload()
-                        ->live(),
-                
-                    Forms\Components\TextInput::make('cantidad')
-                        ->default(1)
-                    ->live(onBlur: true)
-
-                  //      ->disabled()
-                        ->suffix('Gs.')
-                        ->maxLength(191),
-                    
-            ])
-            ->live(onBlur: true)
+              
                 
             ]);
     }
@@ -146,6 +121,8 @@ class DietaResource extends Resource
     {
         return [
             //
+            RelationManagers\DietadetRelationManager::class,
+
         ];
     }
 

@@ -187,11 +187,15 @@ class PagosResource extends Resource
                             $factura = new Factura;
                             $factura->fecha=now();
                             $factura->sucursal=1;
-                            $factura->nfactura=1;
                             $factura->valorFactura=$pagos->importe;
-                            $factura->valorImpuesto=1;
-
-                            $factura->datosfacturas_id=DatosFactura::where('activo', 1)->where('gym_id', Filament::getTenant()->id)->first()->id;
+                            $factura->valorImpuesto=$pagos->importe/10;
+                            $datosfacturas_id=DatosFactura::where('activo', 1)->where('gym_id', Filament::getTenant()->id)->first()->id;
+                            $factura->datosfacturas_id=$datosfacturas_id;
+                            
+                            $ultimoNumeroFactura = Factura::where('datosfacturas_id', $datosfacturas_id)->max('nfactura');
+                            $factura->nfactura = $ultimoNumeroFactura ? $ultimoNumeroFactura + 1 : 1;
+                            
+                            
                             $factura->gym_id=Filament::getTenant()->id;
                             $factura->clientes_id = $pagos->clientes_id;
                             $factura->save();

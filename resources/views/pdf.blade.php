@@ -5,7 +5,8 @@ $sum2=0;
 $sum3=0;
 function numeroALetras($num)
 {
-    $numero= number_format($num, 2, '.', '');
+    $numero=$num;
+    //$numero= number_format($num, 2, '.', '');
     $unidades = ['', 'uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
     $decenas = ['', 'diez', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
     $centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
@@ -112,7 +113,7 @@ function completarCincoDigitos($numero) {
                 <br>INICIO DE VIGENCIA {{ $record->datosfacturas->vigencia }} 
                 <br>RUC: {{ $record->gym->ruc }}
                 <br> FACTURA VIRTUAL
-                <br>{{ $record->datosfacturas->sucursal }} -{{ completarCincoDigitos($record->id) }}
+                <br>{{ $record->datosfacturas->sucursal }} -{{ completarCincoDigitos($record->nfactura) }}
             </center>
         </th>
     </tr>

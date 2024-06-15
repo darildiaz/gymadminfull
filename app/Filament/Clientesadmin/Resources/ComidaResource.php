@@ -12,13 +12,31 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class ComidaResource extends Resource
 {
     protected static ?string $model = Comida::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+        ->join('dietadet as dd', 'dd.comidas_id', '=', 'comidas.id')
+        ->join('dietas as d', 'd.id', '=', 'dd.dietas_id')
+        ->join('clientes as c', 'c.id', '=', 'd.clientes_id')
+        ->where('c.users_id', Auth::user()->id) // Especificar explícitamente la columna 'id' de la tabla 'clientes'
+        ->select('comidas.*','comidas.id as id'); // Seleccionar solo las columnas necesarias de 'comidas'
 
+
+
+
+        
+        
+        
+
+        
+    }
     public static function form(Form $form): Form
     {
         return $form
@@ -41,9 +59,9 @@ class ComidaResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('gym_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('preparacion')
+                ->searchable()
+                ->html(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -57,12 +75,12 @@ class ComidaResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+            //    Tables\Actions\ViewAction::make(),
+             //   Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+              //      Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }

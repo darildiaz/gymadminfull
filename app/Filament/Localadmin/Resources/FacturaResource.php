@@ -132,7 +132,7 @@ class FacturaResource extends Resource
                 Tables\Columns\TextColumn::make('datosfacturas.timbrado')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('sucursal')
+                Tables\Columns\TextColumn::make('datosfacturas.sucursal')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nfactura')
                     ->numeric()
@@ -169,6 +169,10 @@ class FacturaResource extends Resource
                         )->stream();
                     },'comprobante'. $record->id . '.pdf');
                 }),
+                Tables\Actions\Action::make('Anular factura')
+                ->action(function(Factura $factura){
+                  //  $factura->email_verified_at = Date ('Y-m-d H:i:s');
+                })
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
